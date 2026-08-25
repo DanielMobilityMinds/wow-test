@@ -1280,6 +1280,9 @@ a { color: inherit; }
     transform: translate3d(0, -50%, 0) rotate(0);
   }
 
+  .campaign-nav:hover,
+  .campaign-nav:has(a:focus-visible) { width: 190px; }
+
   .campaign-nav__home {
     width: 100%;
     min-height: 38px;
@@ -1339,6 +1342,9 @@ a { color: inherit; }
     transform: translate3d(-8px, 0, 0);
     transition: opacity .2s ease, transform .28s cubic-bezier(.2, .85, .2, 1);
   }
+
+  .campaign-nav:hover .campaign-nav__links span,
+  .campaign-nav:has(a:focus-visible) .campaign-nav__links span { opacity: 1; transform: none; }
 
   .campaign-nav__links a:hover,
   .campaign-nav__links a:focus-visible { color: #fff; background: rgba(255, 255, 255, .12); outline: none; }
