@@ -1548,17 +1548,16 @@ a { color: inherit; }
     grid-area: auto;
     grid-column: 1 / -1;
     grid-row: 2;
-    width: min(100%, 1120px);
-    min-height: 56px;
+    width: 100%;
+    min-height: 68px;
     margin: 0;
-    padding: 10px 24px;
-    border-radius: 28px;
+    padding: 8px 20px;
+    border-radius: 999px;
     background: rgba(55, 9, 22, .48);
     display: block;
     align-content: center;
-    justify-self: center;
-    font-size: 15px;
-    line-height: 1.35;
+    font-size: 16px;
+    line-height: 1.28;
   }
 
   .offer--l200 .offer__description { max-width: 400px; font-size: 16px; font-weight: 400; }
@@ -1817,9 +1816,9 @@ a { color: inherit; }
     margin-bottom: clamp(14px, calc(4.211svh - 9.6px), 30px);
   }
   .offer .offer__legal {
-    min-height: 0;
+    min-height: clamp(52px, calc(4.211svh + 28.4px), 68px);
     padding-block: clamp(4px, calc(1.053svh - 1.9px), 8px);
-    font-size: clamp(13px, calc(.526svh + 10.1px), 15px);
+    font-size: clamp(13px, calc(1.184svh + 4.9px), 16px);
   }
   .offer__visual .wallbox-badge {
     width: clamp(430px, calc(25.526svh + 287.1px), 527px);
