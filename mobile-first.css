@@ -1278,9 +1278,6 @@ a { color: inherit; }
     transform: translate3d(0, -50%, 0) rotate(0);
   }
 
-  .campaign-nav:hover,
-  .campaign-nav:focus-within { width: 190px; }
-
   .campaign-nav__home {
     width: 100%;
     min-height: 38px;
@@ -1340,9 +1337,6 @@ a { color: inherit; }
     transform: translate3d(-8px, 0, 0);
     transition: opacity .2s ease, transform .28s cubic-bezier(.2, .85, .2, 1);
   }
-
-  .campaign-nav:hover .campaign-nav__links span,
-  .campaign-nav:focus-within .campaign-nav__links span { opacity: 1; transform: none; }
 
   .campaign-nav__links a:hover,
   .campaign-nav__links a:focus-visible { color: #fff; background: rgba(255, 255, 255, .12); outline: none; }
@@ -1724,8 +1718,9 @@ a { color: inherit; }
     min-height: 724px;
     margin-top: 100px;
     padding-top: 76px;
-    grid-template-columns: 530px 172px minmax(264px, 1fr);
-    column-gap: 40px;
+    grid-template-columns: minmax(0, 530px) clamp(132px, 12vw, 172px) minmax(210px, 264px);
+    column-gap: clamp(20px, 2.8vw, 40px);
+    justify-content: space-between;
     align-items: start;
     overflow: hidden;
   }
@@ -1738,11 +1733,11 @@ a { color: inherit; }
     display: block;
     transform: translate(-9px, -68px);
   }
-  .guarantee__polaroids img { position: absolute; width: 264px; }
+  .guarantee__polaroids img { position: absolute; width: min(264px, 100%); }
   .guarantee__polaroids img:nth-child(1) { top: 0; left: 0; }
-  .guarantee__polaroids img:nth-child(2) { top: 140px; left: 38px; }
+  .guarantee__polaroids img:nth-child(2) { top: 140px; left: 38px; width: min(264px, calc(100% - 38px)); }
   .guarantee__polaroids img:nth-child(3) { top: 280px; left: 0; }
-  .guarantee__polaroids img:nth-child(4) { top: 420px; left: 34px; }
+  .guarantee__polaroids img:nth-child(4) { top: 420px; left: 34px; width: min(264px, calc(100% - 34px)); }
   .fineprint { padding-top: 38px; }
   .fineprint__inner { width: min(calc(100% - 200px), 1240px); }
 
