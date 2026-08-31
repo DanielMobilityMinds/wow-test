@@ -25,30 +25,28 @@
       "model": "ASX Diamant",
       "transaction": "financing",
       "transactionLabel": "Monatlich finanzieren",
-      "claim": "Ohne Anzahlung",
       "monthlyRate": 99,
       "currency": "EUR",
       "priceAsset": "assets/price-1.png",
       "vehicleAsset": "assets/asx.webp",
-      "ctaLabel": "Jetzt Angebot ansehen",
+      "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/asx",
       "officialReference": "https://www.mitsubishi-motors.de/asx",
-      "needsClientApproval": ["claim", "financingTerms", "footnoteReference"]
+      "needsClientApproval": ["financingTerms", "footnoteReference"]
     },
     {
       "id": "grandis",
       "model": "Grandis Diamant",
       "transaction": "financing",
       "transactionLabel": "Monatlich finanzieren",
-      "claim": "Ohne Anzahlung",
       "monthlyRate": 129,
       "currency": "EUR",
       "priceAsset": "assets/price-2.png",
       "vehicleAsset": "assets/grandis.webp",
-      "ctaLabel": "Jetzt Angebot ansehen",
+      "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/grandis",
       "officialReference": "https://www.mitsubishi-motors.de/grandis",
-      "needsClientApproval": ["claim", "financingTerms", "footnoteReference"]
+      "needsClientApproval": ["financingTerms", "footnoteReference"]
     },
     {
       "id": "outlander-diamant",
@@ -60,7 +58,7 @@
       "currency": "EUR",
       "priceAsset": "assets/price-3.png",
       "vehicleAsset": "assets/vehicles/outlander-diamant.webp",
-      "ctaLabel": "Jetzt Angebot ansehen",
+      "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "officialReference": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "needsClientApproval": ["wallboxInclusion", "legalCopy", "campaignValidity"]
@@ -75,7 +73,7 @@
       "currency": "EUR",
       "priceAsset": "assets/price-4.png",
       "vehicleAsset": "assets/vehicles/outlander-black.webp",
-      "ctaLabel": "Jetzt Angebot ansehen",
+      "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "officialReference": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "needsClientApproval": ["wallboxInclusion", "legalCopy", "campaignValidity"]
@@ -88,8 +86,8 @@
       "monthlyRate": 99,
       "currency": "EUR",
       "priceAsset": "assets/price-5.png",
-      "vehicleAsset": "assets/eclipse-cross.webp",
-      "ctaLabel": "Jetzt Angebot ansehen",
+      "vehicleAsset": "assets/s6_Eclipse_Cross_Konter_rgb_11.png",
+      "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/eclipse-cross",
       "officialReference": "https://www.mitsubishi-motors.de/eclipse-cross",
       "needsClientApproval": ["availability", "subsidyClaim", "batteryVariant", "legalCopy"]
@@ -101,12 +99,12 @@
       "price": 39990,
       "currency": "EUR",
       "priceAsset": "assets/price-6.png",
-      "vehicleAsset": "assets/l200.webp",
+      "vehicleAsset": "assets/s7_L200_front-left_W19_konter_RGB.png",
       "description": "Ab Jahresende 2026 wieder zu haben. Unser L200 ist ein robuster, vielseitiger Pick-up mit ausgeprägten Offroad-Qualitäten, hoher Geländetauglichkeit und alltagstauglichem Komfort.",
       "legalPlaceholder": "Verbrauchs- und Effizienzwerte werden ergänzt.",
       "ctaLabel": "Mehr zum L200",
-      "ctaTarget": "https://www.mitsubishi-motors.de/l200-doppelkabine",
-      "officialReference": "https://www.mitsubishi-motors.de/l200-doppelkabine",
+      "ctaTarget": "https://www.mitsubishi-motors.de/l200",
+      "officialReference": "https://www.mitsubishi-motors.de/l200",
       "needsClientApproval": ["launchDate", "price", "ctaTarget", "legalCopy"]
     }
   ],
