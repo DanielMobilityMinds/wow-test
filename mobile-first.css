@@ -597,10 +597,10 @@ a { color: inherit; }
 .fineprint__note { margin: 0 0 24px; }
 .legal-list { display: grid; gap: 18px; margin: 36px 0; }
 .legal-list p { margin: 0; }
-.legal-footnote { display: grid; gap: 12px; scroll-margin-top: calc(var(--header-h) + 16px); }
-.legal-footnote__table { width: 100%; max-width: 660px; border-collapse: collapse; }
+.legal-footnote { display: grid; gap: 8px; scroll-margin-top: calc(var(--header-h) + 16px); }
+.legal-footnote__table { width: auto; max-width: 100%; justify-self: start; border-collapse: collapse; }
 .legal-footnote__table th,
-.legal-footnote__table td { padding: 3px 12px 3px 0; text-align: left; vertical-align: top; }
+.legal-footnote__table td { padding: 2px 28px 2px 0; text-align: left; vertical-align: top; }
 .legal-footnote__table th { font-weight: 700; }
 .efficiency { padding: 20px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
 .efficiency h3 { margin: 0 0 12px; font: inherit; font-weight: 700; }
