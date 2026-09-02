@@ -693,6 +693,13 @@ a { color: inherit; }
     mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 100%);
     transition: max-height .35s ease;
   }
+  .mobile-more__content--always {
+    display: contents;
+    max-height: none;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
   .mobile-more__content.is-expanded {
     max-height: 40em;
     -webkit-mask-image: none;
