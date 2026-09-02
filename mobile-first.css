@@ -1145,6 +1145,10 @@ a { color: inherit; }
     }
 
     .offer--l200 .coming { width: min(100%, 320px); }
+    .offer--l200 .offer__visual .offer__car {
+      align-self: start;
+      margin-top: 0;
+    }
   }
 
   @media (orientation: portrait) and (min-height: 1100px) {
