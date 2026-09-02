@@ -155,7 +155,6 @@ a { color: inherit; }
   --hero-fade: 1;
   --hero-copy-fade: 1;
   --hero-bloom: 0;
-  --hero-cover: 0;
   --hero-pin-y: 0px;
   --hero-pin-distance: 90svh;
   --hero-wow-top: clamp(152px, 23svh, 194px);
@@ -519,7 +518,7 @@ a { color: inherit; }
 .offer--l200 .offer__car { width: 115%; margin: -14px 0 0; }
 
 /* Keep related cards on identical optical rails despite different cutout ratios. */
-@media (max-width: 699px) {
+@media (max-width: 719px) {
   .offer--asx .offer__inner,
   .offer--grandis .offer__inner {
     grid-template-rows: auto auto auto auto clamp(138px, 43.4vw, 169px) auto auto;
@@ -628,7 +627,7 @@ a { color: inherit; }
 .reveal,
 .reveal.is-visible { opacity: 1; transform: none; }
 
-@media (max-width: 699px) {
+@media (max-width: 719px) {
   .skip-link,
   .mobile-nav {
     position: absolute;
@@ -722,7 +721,7 @@ a { color: inherit; }
   .mobile-more__toggle:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
 }
 
-@media (max-width: 699px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 719px) and (prefers-reduced-motion: reduce) {
   .mobile-more__content { transition: none; }
 }
 
@@ -765,7 +764,7 @@ a { color: inherit; }
   100% { opacity: 0; transform: translateX(470%) rotate(12deg); }
 }
 
-@media (max-width: 699px) and (prefers-reduced-motion: reduce) {
+@media (max-width: 719px) and (prefers-reduced-motion: reduce) {
   .site-header { position: absolute; opacity: 1; transform: none; animation: none; will-change: auto; }
   .hero { min-height: var(--hero-frame-h); }
   .hero__motion { position: absolute; animation: none; transform: none; }
@@ -786,8 +785,9 @@ a { color: inherit; }
   .wallbox-badge p { font-size: 16px; }
 }
 
-/* Tablet system: one width-owned layer, portrait first with a focused landscape branch. */
-@media (min-width: 700px) and (max-width: 1199px) {
+/* Tablet system: one owner for 720–1366 px, portrait first with a focused landscape branch. */
+@media (min-width: 720px) and (max-width: 1024px),
+       (min-width: 1025px) and (max-width: 1366px) and (max-aspect-ratio: 1499 / 1000) {
   :root {
     --header-h: 72px;
     --gutter: clamp(28px, 4vw, 44px);
@@ -938,6 +938,20 @@ a { color: inherit; }
     backface-visibility: hidden;
   }
 
+  .has-motion .offer__copy > h2,
+  .has-motion .offer__eyebrow,
+  .has-motion .offer__payment,
+  .has-motion .price-art,
+  .has-motion .coming,
+  .has-motion .offer__visual .offer__car,
+  .has-motion .offer__visual .wallbox-badge,
+  .has-motion .offer__visual .offer__subsidy,
+  .has-motion .offer__copy > .cta,
+  .has-motion .offer__actions,
+  .has-motion .offer .offer__legal {
+    will-change: transform, opacity;
+  }
+
   /* Every visible silhouette occupies the same 96% content rail. */
   .offer__visual .offer__car--asx { --car-width: min(109.7%, 1010px); --car-y: 0%; translate: 1.84% 0; }
   .offer__visual .offer__car--grandis { --car-width: min(107.8%, 992px); --car-y: 0%; translate: 2.48% 0; }
@@ -1030,48 +1044,8 @@ a { color: inherit; }
 
   /* Portrait lifts vehicles without a top-right badge into the open visual rail. */
   @media (orientation: portrait) {
-    .offer__inner,
     .offer--l200 .offer__inner {
-      grid-template-rows: auto;
-    }
-
-    .offer__stage {
-      width: 100%;
-      display: grid;
-      align-content: start;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas:
-        "title"
-        "eyebrow"
-        "payment"
-        "price"
-        "availability"
-        "car"
-        "description"
-        "from"
-        "cta"
-        "legal";
-    }
-
-    .offer__copy {
-      width: auto;
-      display: contents;
-    }
-
-    .offer__visual {
-      grid-area: car;
-      min-height: clamp(340px, 42svh, 480px);
-      margin-top: clamp(-46px, -4svh, -28px);
-    }
-
-    .offer__actions,
-    .offer__copy > .cta {
-      width: min(100%, 400px);
-      margin-top: 12px;
-    }
-
-    .offer .offer__legal {
-      grid-area: legal;
+      grid-template-rows: auto minmax(340px, 1fr) auto;
     }
 
     @media (max-height: 1250px) {
@@ -1082,7 +1056,7 @@ a { color: inherit; }
     .offer__visual .wallbox-badge {
       width: min(36%, 340px);
       max-width: 340px;
-      margin-top: 0;
+      margin-top: clamp(-230px, -20svh, -180px);
       grid-template-columns: minmax(0, 1fr);
       justify-items: center;
       gap: 4px;
@@ -1253,14 +1227,11 @@ a { color: inherit; }
  * Each vehicle exposes only optical desktop tokens. The rendering rule stays
  * shared, while differing transparent canvases can be aligned per model.
  */
-@media (min-width: 1200px) {
+@media (min-width: 1367px),
+       (min-width: 1025px) and (min-aspect-ratio: 3 / 2) {
   :root { --header-h: 90px; --gutter: 44px; --radius: 52px; }
 
-  .offer-flow {
-    position: relative;
-    z-index: 1;
-    margin-top: -100svh;
-  }
+  .offer-flow { margin-top: 0; }
   .offer-flow > .offer + .offer { margin-top: 0; }
 
   .offer--asx {
@@ -1472,12 +1443,9 @@ a { color: inherit; }
   .hero__copy a span { width: auto; height: auto; border: 0; display: block; background: none; }
 
   .hero.is-desktop-cinematic {
-    position: relative;
-    z-index: 2;
     min-height: 170svh;
     overflow: clip;
     display: block;
-    opacity: var(--hero-stage-fade, 1);
   }
 
   .hero.is-desktop-cinematic .hero__motion {
@@ -1487,14 +1455,6 @@ a { color: inherit; }
     height: 100svh;
     transform: none;
     will-change: auto;
-  }
-
-  .hero.is-desktop-cinematic .hero__motion::before {
-    display: block;
-    inset: 0;
-    background: #ffbcbc;
-    opacity: var(--hero-cover);
-    transform: none;
   }
 
   .hero.is-desktop-cinematic .hero__wow {
@@ -1680,7 +1640,7 @@ a { color: inherit; }
 
   /* Desktop cinematic offer sequence: oversized entry, diagonal settle, final layout. */
   .offer.is-cinematic {
-    min-height: 215svh;
+    min-height: 190svh;
     overflow: clip;
   }
 
@@ -1767,21 +1727,26 @@ a { color: inherit; }
   }
 
   .offer.is-cinematic .offer__copy > .cta {
-    visibility: visible;
-    opacity: var(--cin-cta-p, 1);
-    clip-path: none;
-    transform: translate3d(0, calc((1 - var(--cin-cta-p, 1)) * 18px), 0);
+    visibility: hidden;
+    opacity: 1;
+    clip-path: inset(0 var(--cin-cta-clip, 0%) 0 0 round 999px);
+    transform: translate3d(var(--cin-cta-x, 0px), 0, 0) scale(var(--cin-cta-scale, 1));
     transform-origin: left center;
     will-change: auto;
   }
 
   .offer.is-cinematic .offer__actions {
-    visibility: visible;
-    opacity: var(--cin-cta-p, 1);
-    clip-path: none;
-    transform: translate3d(0, calc((1 - var(--cin-cta-p, 1)) * 18px), 0);
+    visibility: hidden;
+    opacity: 1;
+    clip-path: inset(0 var(--cin-cta-clip, 0%) 0 0);
+    transform: translate3d(var(--cin-cta-x, 0px), 0, 0) scale(var(--cin-cta-scale, 1));
     transform-origin: left center;
     will-change: auto;
+  }
+
+  .offer.is-cinematic.is-cinematic-actions-ready .offer__copy > .cta,
+  .offer.is-cinematic.is-cinematic-actions-ready .offer__actions {
+    visibility: visible;
   }
 
   .offer.is-cinematic .offer__legal {
@@ -1817,7 +1782,7 @@ a { color: inherit; }
 
   .offer.is-cinematic.is-cinematic-active .offer__copy > .cta,
   .offer.is-cinematic.is-cinematic-active .offer__actions {
-    will-change: transform, opacity;
+    will-change: transform, clip-path;
   }
 
   .benefits { min-height: 2120px; margin-top: 0; padding: 24px 0 105px; }
@@ -1871,7 +1836,8 @@ a { color: inherit; }
  * Short desktop interpolates continuously from 560px to 940px viewport height.
  * Every upper clamp matches the regular desktop rule, so resizing never jumps.
  */
-@media (min-width: 1200px) and (max-height: 939px) {
+@media (min-width: 1367px) and (max-height: 939px),
+       (min-width: 1025px) and (min-aspect-ratio: 3 / 2) and (max-height: 939px) {
   :root { --header-h: clamp(72px, calc(4.737svh + 45.5px), 90px); }
   .offer--asx { --car-y: clamp(14px, calc(5.789svh - 18.4px), 36px); }
   .offer--grandis {
