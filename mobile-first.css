@@ -1090,7 +1090,7 @@ a { color: inherit; }
       grid-column: 1;
       grid-row: 2;
       min-height: clamp(430px, 44svh, 540px);
-      margin: clamp(-88px, -6svh, -58px) 0 0;
+      margin: 24px 0 0;
       display: grid;
       grid-template: 1fr / minmax(0, 1fr);
       position: static;
