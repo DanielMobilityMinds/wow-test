@@ -327,7 +327,7 @@ const elementViewportProgress = (element, stage, frameHeight, start, end) => {
 
 function renderKineticCards() {
   const tabletMotion = tabletHero.matches;
-  const active = mobileHero.matches && !reducedMotion.matches;
+  const active = (mobileHero.matches || tabletMotion) && !reducedMotion.matches;
   const frameHeight = tabletMotion ? window.innerHeight : (heroViewportHeight || window.innerHeight);
 
   if (!active && kineticCardsActive === false) return;
@@ -506,19 +506,26 @@ function renderCinematicOffers(frameTime = performance.now()) {
 
   if (!active && cinematicOffersActive === false) return;
 
-  if (active) cinematicOffers.forEach((offer) => offer.stage.classList.add('is-cinematic'));
+  if (!active) {
+    cinematicOffers.forEach(clearCinematicOffer);
+    cinematicOffersActive = false;
+    return;
+  }
+
+  cinematicOffers.forEach((offer) => offer.stage.classList.add('is-cinematic'));
+
+  /* Read every stage before writing animation styles to avoid layout thrashing. */
+  const offerMeasurements = cinematicOffers.map((offer) => ({
+    offer,
+    rect: offer.stage.getBoundingClientRect(),
+    height: offer.stage.offsetHeight,
+  }));
 
   let needsAnotherFrame = false;
 
-  cinematicOffers.forEach((offer) => {
-    if (!active) {
-      clearCinematicOffer(offer);
-      return;
-    }
-
-    const rect = offer.stage.getBoundingClientRect();
+  offerMeasurements.forEach(({ offer, rect, height }) => {
     const entryLead = (offer.entryLead ?? 0) * frameHeight;
-    const distance = Math.max(1, offer.stage.offsetHeight - frameHeight + entryLead);
+    const distance = Math.max(1, height - frameHeight + entryLead);
     const targetProgress = clamp((entryLead - rect.top) / distance);
     const nearViewport = rect.bottom > -frameHeight * .2 && rect.top < frameHeight * 1.2;
 
@@ -595,13 +602,15 @@ function renderCinematicOffers(frameTime = performance.now()) {
 
 const renderHero = (frameTime) => {
   heroFrame = 0;
-  renderCinematicOffers(frameTime);
   const desktopHeroActive = Boolean(heroStage && desktopMotion.matches && !reducedMotion.matches);
   heroStage?.classList.toggle('is-desktop-cinematic', desktopHeroActive);
+  const heroRect = heroStage?.getBoundingClientRect();
+  const heroHeight = heroStage?.offsetHeight ?? 0;
+  renderCinematicOffers(frameTime);
   if (heroStage && (tabletHero.matches || desktopHeroActive) && !reducedMotion.matches) {
     const frameHeight = measureStableViewportHeight();
-    const rect = heroStage.getBoundingClientRect();
-    const distance = Math.max(1, heroStage.offsetHeight - frameHeight);
+    const rect = heroRect;
+    const distance = Math.max(1, heroHeight - frameHeight);
     const progress = clamp(-rect.top / distance);
     const cinematic = smootherstep(0, 1, progress);
     const zoom = 1 + cinematic * 2.4;
@@ -669,8 +678,8 @@ const renderHero = (frameTime) => {
     heroStage.style.setProperty('--hero-drift-y', `${Math.round(heroViewportHeight * .17)}px`);
   }
 
-  const rect = heroStage.getBoundingClientRect();
-  const distance = Math.max(1, heroStage.offsetHeight - heroViewportHeight);
+  const rect = heroRect;
+  const distance = Math.max(1, heroHeight - heroViewportHeight);
   const progress = clamp(-rect.top / distance);
   const pinY = clamp(-rect.top, 0, distance);
   if (rect.bottom < heroViewportHeight * 1.35) renderKineticCards();

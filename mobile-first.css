@@ -1054,8 +1054,10 @@ a { color: inherit; }
     .offer__inner,
     .offer--l200 .offer__inner {
       grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto minmax(430px, 1fr) auto;
+      grid-template-rows: auto minmax(clamp(350px, 35svh, 440px), 1fr) auto;
       column-gap: 0;
+      padding-top: clamp(28px, 3.2svh, 40px);
+      padding-bottom: clamp(20px, 2.2svh, 28px);
     }
 
     .offer__stage {
@@ -1065,7 +1067,7 @@ a { color: inherit; }
     .offer__copy {
       grid-column: 1;
       grid-row: 1;
-      width: min(60%, 520px);
+      width: min(64%, 540px);
       display: flex;
       margin: 0;
     }
@@ -1074,23 +1076,32 @@ a { color: inherit; }
     .offer__eyebrow { font-size: clamp(20px, 2.6vw, 25px); }
     .offer__payment { font-size: clamp(22px, 2.9vw, 27px); }
     .price-art,
-    .coming { width: min(100%, 470px); margin-top: 14px; }
-    .price-art--short { width: min(94%, 430px); }
+    .coming { width: min(100%, 430px); margin-top: 10px; }
+    .price-art--short { width: min(94%, 410px); }
 
-    .offer__actions,
     .offer__copy > .cta {
       width: min(100%, 400px);
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
+    .offer__actions {
+      width: min(100%, 520px);
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .offer__action-copy { grid-column: 1 / -1; margin-bottom: 0; }
+
     .offer__actions .cta,
-    .offer__copy > .cta { min-height: 64px; }
+    .offer__copy > .cta { min-height: 56px; padding-inline: 12px; font-size: 15px; }
 
     .offer__visual {
       grid-column: 1;
       grid-row: 2;
-      min-height: clamp(430px, 44svh, 540px);
-      margin: 24px 0 0;
+      min-height: clamp(350px, 35svh, 440px);
+      margin: 16px 0 0;
       display: grid;
       grid-template: 1fr / minmax(0, 1fr);
       position: static;
@@ -1104,6 +1115,21 @@ a { color: inherit; }
       margin: 0 0 clamp(8px, 1svh, 14px);
       transform: none;
     }
+
+    /* The tall Eclipse cutout must not enlarge the one-screen tablet grid. */
+    .offer__visual .offer__car--eclipse {
+      width: auto;
+      max-width: min(110.2%, 1014px);
+      max-height: clamp(460px, 38svh, 520px);
+    }
+
+    .offer--eclipse .offer__inner {
+      padding-top: 16px;
+      padding-bottom: 18px;
+    }
+
+    .offer--eclipse .offer__visual { margin-top: 8px; }
+    .offer--eclipse .offer__legal { margin-top: 0; }
 
     .offer__visual .wallbox-badge {
       position: absolute;
@@ -1141,13 +1167,50 @@ a { color: inherit; }
     .offer .offer__legal {
       grid-column: 1;
       grid-row: 3;
-      margin-top: 10px;
+      min-block-size: 96px;
+      margin-top: 8px;
+      padding-block: 12px;
     }
 
     .offer--l200 .coming { width: min(100%, 320px); }
+    .offer--l200 .offer__visual { margin-top: 24px; }
     .offer--l200 .offer__visual .offer__car {
       align-self: start;
       margin-top: 0;
+    }
+  }
+
+  @media (orientation: portrait) and (max-height: 1099px) {
+    .offer__inner,
+    .offer--l200 .offer__inner {
+      grid-template-rows: auto minmax(clamp(300px, 31svh, 340px), 1fr) auto;
+      padding-top: 24px;
+      padding-bottom: 16px;
+    }
+
+    .offer h2 { font-size: clamp(38px, 5.4vw, 48px); }
+    .offer__eyebrow { font-size: clamp(18px, 2.4vw, 22px); }
+    .offer__payment { font-size: clamp(20px, 2.6vw, 24px); }
+    .price-art,
+    .coming { width: min(100%, 380px); margin-top: 8px; }
+    .price-art--short { width: min(94%, 360px); }
+    .offer__actions { margin-top: 8px; gap: 6px; }
+    .offer__action-copy { font-size: 14px; line-height: 1.18; }
+    .offer__actions .cta,
+    .offer__copy > .cta { min-height: 50px; font-size: 14px; }
+    .offer__visual {
+      min-height: clamp(300px, 31svh, 340px);
+      margin-top: 12px;
+    }
+    .offer__visual .offer__car--eclipse {
+      max-height: clamp(350px, 35svh, 390px);
+    }
+    .offer--eclipse .offer__visual { margin-top: 4px; }
+    .offer .offer__legal {
+      min-block-size: 88px;
+      margin-top: 6px;
+      padding-block: 10px;
+      font-size: 13px;
     }
   }
 
