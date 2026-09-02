@@ -1049,41 +1049,33 @@ a { color: inherit; }
   }
   .fineprint { padding-top: 58px; }
 
-  /* Portrait lifts vehicles without a top-right badge into the open visual rail. */
+  /* Tablet portrait: restore the approved top-copy / top-right badge / low-car composition. */
   @media (orientation: portrait) {
     .offer__inner,
     .offer--l200 .offer__inner {
-      grid-template-rows: auto;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(430px, 1fr) auto;
+      column-gap: 0;
     }
 
     .offer__stage {
-      width: 100%;
-      display: grid;
-      align-content: start;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas:
-        "title"
-        "eyebrow"
-        "payment"
-        "price"
-        "availability"
-        "car"
-        "description"
-        "from"
-        "cta"
-        "legal";
-    }
-
-    .offer__copy {
-      width: auto;
       display: contents;
     }
 
-    .offer__visual {
-      grid-area: car;
-      min-height: clamp(340px, 42svh, 480px);
-      margin-top: clamp(-46px, -4svh, -28px);
+    .offer__copy {
+      grid-column: 1;
+      grid-row: 1;
+      width: min(60%, 520px);
+      display: flex;
+      margin: 0;
     }
+
+    .offer h2 { font-size: clamp(42px, 5.8vw, 60px); }
+    .offer__eyebrow { font-size: clamp(20px, 2.6vw, 25px); }
+    .offer__payment { font-size: clamp(22px, 2.9vw, 27px); }
+    .price-art,
+    .coming { width: min(100%, 470px); margin-top: 14px; }
+    .price-art--short { width: min(94%, 430px); }
 
     .offer__actions,
     .offer__copy > .cta {
@@ -1091,19 +1083,36 @@ a { color: inherit; }
       margin-top: 12px;
     }
 
-    .offer .offer__legal {
-      grid-area: legal;
+    .offer__actions .cta,
+    .offer__copy > .cta { min-height: 64px; }
+
+    .offer__visual {
+      grid-column: 1;
+      grid-row: 2;
+      min-height: clamp(430px, 44svh, 540px);
+      margin: clamp(-88px, -6svh, -58px) 0 0;
+      display: grid;
+      grid-template: 1fr / minmax(0, 1fr);
+      position: static;
     }
 
-    @media (max-height: 1250px) {
-      .offer--l200 .coming { width: min(100%, 320px); }
-      .offer__visual .offer__car--l200 { --car-width: min(94%, 865px); }
+    .offer__visual .offer__car {
+      grid-area: 1 / 1;
+      align-self: end;
+      justify-self: center;
+      max-width: none;
+      margin: 0 0 clamp(8px, 1svh, 14px);
+      transform: none;
     }
 
     .offer__visual .wallbox-badge {
-      width: min(36%, 340px);
-      max-width: 340px;
-      margin-top: 0;
+      position: absolute;
+      top: clamp(80px, 8svh, 105px);
+      right: 0;
+      z-index: 4;
+      width: min(36%, 300px);
+      max-width: 300px;
+      margin: 0;
       grid-template-columns: minmax(0, 1fr);
       justify-items: center;
       gap: 4px;
@@ -1111,18 +1120,31 @@ a { color: inherit; }
     }
 
     .offer__visual .wallbox-badge img {
-      width: clamp(228px, 31vw, 290px);
+      width: clamp(190px, 27vw, 240px);
       max-width: none;
     }
 
     .offer__visual .wallbox-badge p {
-      font-size: clamp(21px, 2.6vw, 26px);
-      line-height: 1.02;
+      font-size: clamp(20px, 2.5vw, 24px);
+      line-height: 1.03;
     }
 
-    .offer__visual .offer__car--asx { --car-y: 0%; }
-    .offer__visual .offer__car--grandis { --car-y: 0%; }
-    .offer__visual .offer__car--l200 { --car-y: 1%; }
+    .offer__visual .offer__subsidy {
+      grid-area: 1 / 1;
+      align-self: end;
+      justify-self: end;
+      width: clamp(180px, 24vw, 230px);
+      margin: 0 clamp(2px, .6vw, 8px) clamp(24px, 3svh, 40px) 0;
+      translate: none;
+    }
+
+    .offer .offer__legal {
+      grid-column: 1;
+      grid-row: 3;
+      margin-top: 10px;
+    }
+
+    .offer--l200 .coming { width: min(100%, 320px); }
   }
 
   @media (orientation: portrait) and (min-height: 1100px) {

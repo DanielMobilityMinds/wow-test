@@ -327,7 +327,7 @@ const elementViewportProgress = (element, stage, frameHeight, start, end) => {
 
 function renderKineticCards() {
   const tabletMotion = tabletHero.matches;
-  const active = (mobileHero.matches || tabletMotion) && !reducedMotion.matches;
+  const active = mobileHero.matches && !reducedMotion.matches;
   const frameHeight = tabletMotion ? window.innerHeight : (heroViewportHeight || window.innerHeight);
 
   if (!active && kineticCardsActive === false) return;
