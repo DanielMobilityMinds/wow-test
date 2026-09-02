@@ -395,6 +395,7 @@ function renderKineticCards() {
 const cinematicOffers = [
   {
     selector: '.offer--asx',
+    entryLead: .75,
     price: { x: .18, y: -.26, scale: .72, start: .04, end: .42, rotate: -.7 },
     car: { x: -.2, y: .3, scale: .52, start: .02, end: .58, rotate: .45 },
     copy: { start: .28, end: .5 }, cta: .58,
@@ -516,8 +517,9 @@ function renderCinematicOffers(frameTime = performance.now()) {
     }
 
     const rect = offer.stage.getBoundingClientRect();
-    const distance = Math.max(1, offer.stage.offsetHeight - frameHeight);
-    const targetProgress = clamp(-rect.top / distance);
+    const entryLead = (offer.entryLead ?? 0) * frameHeight;
+    const distance = Math.max(1, offer.stage.offsetHeight - frameHeight + entryLead);
+    const targetProgress = clamp((entryLead - rect.top) / distance);
     const nearViewport = rect.bottom > -frameHeight * .2 && rect.top < frameHeight * 1.2;
 
     if (offer.currentProgress === null || !nearViewport) {

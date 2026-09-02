@@ -1443,7 +1443,7 @@ a { color: inherit; }
   .hero__copy a span { width: auto; height: auto; border: 0; display: block; background: none; }
 
   .hero.is-desktop-cinematic {
-    min-height: 190svh;
+    min-height: 170svh;
     overflow: clip;
     display: block;
   }
@@ -1537,7 +1537,7 @@ a { color: inherit; }
     width: min(100%, 320px);
     margin-top: 22px;
     margin-bottom: 0;
-    gap: 8px;
+    gap: 14px;
   }
 
   .offer__actions .cta {
@@ -1546,7 +1546,7 @@ a { color: inherit; }
   }
 
   .offer__action-copy {
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     font-size: 16px;
     line-height: 1.25;
   }
@@ -1888,7 +1888,7 @@ a { color: inherit; }
   }
   .offer__actions {
     margin-top: clamp(10px, calc(3.158svh - 7.7px), 22px);
-    gap: clamp(6px, calc(.526svh + 3.1px), 8px);
+    gap: clamp(10px, calc(1.053svh + 4.1px), 14px);
   }
   .offer__actions .cta {
     min-height: clamp(44px, calc(3.684svh + 23.4px), 58px);
