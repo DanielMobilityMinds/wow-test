@@ -1367,7 +1367,7 @@ a { color: inherit; }
        (min-width: 1025px) and (min-aspect-ratio: 3 / 2) {
   :root { --header-h: 90px; --gutter: 44px; --radius: 52px; }
 
-  .offer-flow { margin-top: 0; }
+  .offer-flow { margin-top: -1px; }
   .offer-flow > .offer + .offer { margin-top: -1px; }
 
   .offer--asx {
@@ -1921,7 +1921,7 @@ a { color: inherit; }
     will-change: transform, clip-path;
   }
 
-  .benefits { min-height: 2120px; margin-top: 0; padding: 24px 0 105px; }
+  .benefits { min-height: 2120px; margin-top: -1px; padding: 24px 0 105px; }
   .benefits h2 { margin-bottom: 54px; font-size: 58px; }
   .benefits__inner { width: min(calc(100% - 185px), 1240px); }
   .wallbox-story { min-height: 570px; grid-template-columns: 300px 303px minmax(0, 1fr); grid-template-areas: "summary visual text"; gap: 24px; }
