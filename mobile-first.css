@@ -1534,13 +1534,14 @@ a { color: inherit; }
 
   .offer__actions {
     z-index: 7;
-    width: min(100%, 320px);
+    width: min(100%, 420px);
     margin-top: 22px;
     margin-bottom: 0;
     gap: 14px;
   }
 
   .offer__actions .cta {
+    width: min(100%, 320px);
     min-height: 58px;
     font-size: 17px;
   }
