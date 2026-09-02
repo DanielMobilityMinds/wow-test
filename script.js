@@ -68,12 +68,6 @@ let heroViewportHeight = 0;
 let heroViewportWidth = 0;
 let cinematicOffersActive = null;
 let cinematicFrameTime = null;
-let lastScrollSampleY = window.scrollY;
-let lastScrollSampleTime = performance.now();
-let lastScrollInputTime = 0;
-let scrollInputSpeed = 0;
-let cinematicWheelLock = null;
-let cinematicWheelReleaseTimer = 0;
 
 document.documentElement.classList.add('has-motion');
 
@@ -260,93 +254,18 @@ const cinematicOffers = [
 ]
   .map((config) => ({ ...config, stage: document.querySelector(config.selector) }))
   .filter((offer) => offer.stage)
-  .map((offer) => {
-    const snapPoint = document.createElement('span');
-    const snapProgress = clamp(Math.max(
-      offer.price.end,
-      offer.car.end,
-      offer.copy.end,
-      offer.cta + .08,
-      offer.extra?.end ?? 0,
-      offer.subsidy?.end ?? 0,
-      .6,
-    ) + .04, .7, .9);
-
-    snapPoint.className = 'cinematic-snap-point';
-    snapPoint.setAttribute('aria-hidden', 'true');
-    offer.stage.append(snapPoint);
-
-    return {
-      ...offer,
-      snapProgress,
-      elements: {
-        price: offer.stage.querySelector('.price-art, .coming'),
-        car: offer.stage.querySelector('.offer__car'),
-        extra: offer.stage.querySelector('.wallbox-badge'),
-        subsidy: offer.stage.querySelector('.offer__subsidy'),
-        cta: offer.stage.querySelector('.offer__actions, .offer__copy > .cta'),
-        snapPoint,
-      },
-      currentProgress: null,
-      lastWrittenProgress: null,
-      lastSnapOffset: null,
-    };
-  });
-
-const releaseCinematicWheelLock = () => {
-  cinematicWheelLock = null;
-  window.clearTimeout(cinematicWheelReleaseTimer);
-  cinematicWheelReleaseTimer = 0;
-};
-
-const scheduleCinematicWheelRelease = () => {
-  window.clearTimeout(cinematicWheelReleaseTimer);
-  cinematicWheelReleaseTimer = window.setTimeout(releaseCinematicWheelLock, 220);
-};
-
-const handleCinematicWheel = (event) => {
-  const active = desktopMotion.matches
-    && !reducedMotion.matches
-    && document.documentElement.classList.contains('has-cinematic-snap');
-  if (!active || event.ctrlKey) {
-    releaseCinematicWheelLock();
-    return;
-  }
-
-  const deltaMultiplier = event.deltaMode === WheelEvent.DOM_DELTA_LINE
-    ? 16
-    : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-      ? window.innerHeight
-      : 1;
-  const deltaY = event.deltaY * deltaMultiplier;
-  if (!deltaY || Math.abs(deltaY) <= Math.abs(event.deltaX * deltaMultiplier)) return;
-
-  const direction = Math.sign(deltaY);
-  if (cinematicWheelLock?.direction === direction) {
-    event.preventDefault();
-    scheduleCinematicWheelRelease();
-    return;
-  }
-  if (cinematicWheelLock) releaseCinematicWheelLock();
-
-  const currentY = window.scrollY;
-  const projectedY = currentY + deltaY;
-  const snapPositions = cinematicOffers
-    .map((offer) => window.scrollY + offer.elements.snapPoint.getBoundingClientRect().top)
-    .sort((a, b) => a - b);
-  const crossedSnap = direction > 0
-    ? snapPositions.find((position) => position > currentY + 2 && position <= projectedY + 2)
-    : snapPositions.findLast((position) => position < currentY - 2 && position >= projectedY - 2);
-
-  if (!Number.isFinite(crossedSnap)) return;
-
-  event.preventDefault();
-  cinematicWheelLock = { direction, position: crossedSnap };
-  window.scrollTo({ top: crossedSnap, behavior: 'smooth' });
-  scheduleCinematicWheelRelease();
-};
-
-window.addEventListener('wheel', handleCinematicWheel, { passive: false });
+  .map((offer) => ({
+    ...offer,
+    elements: {
+      price: offer.stage.querySelector('.price-art, .coming'),
+      car: offer.stage.querySelector('.offer__car'),
+      extra: offer.stage.querySelector('.wallbox-badge'),
+      subsidy: offer.stage.querySelector('.offer__subsidy'),
+      cta: offer.stage.querySelector('.offer__actions, .offer__copy > .cta'),
+    },
+    currentProgress: null,
+    lastWrittenProgress: null,
+  }));
 
 campaignNavLinks.forEach((link) => {
   link.addEventListener('click', (event) => {
@@ -376,7 +295,7 @@ const cinematicProperties = [
   '--cin-car-p', '--cin-car-x', '--cin-car-y', '--cin-car-scale', '--cin-car-rotate',
   '--cin-extra-p', '--cin-extra-x', '--cin-extra-y', '--cin-extra-scale',
   '--cin-subsidy-p', '--cin-subsidy-x', '--cin-subsidy-y', '--cin-subsidy-scale',
-  '--cin-cta-p', '--cin-legal-p', '--cin-detail-p', '--cin-snap-offset',
+  '--cin-cta-p', '--cin-legal-p', '--cin-detail-p',
 ];
 
 const setCinematicNumber = (stage, property, value) => {
@@ -389,7 +308,6 @@ const clearCinematicOffer = (offer) => {
   if (offer.elements.cta) offer.elements.cta.inert = false;
   offer.currentProgress = null;
   offer.lastWrittenProgress = null;
-  offer.lastSnapOffset = null;
   cinematicFrameTime = null;
 };
 
@@ -400,12 +318,7 @@ function renderCinematicOffers(frameTime = performance.now()) {
   const motionWidth = Math.min(frameWidth, 1440);
   const motionHeight = Math.min(frameHeight, 940);
   const deltaTime = cinematicFrameTime === null ? 1000 / 60 : clamp(frameTime - cinematicFrameTime, 1, 34);
-  const inputIsActive = frameTime - lastScrollInputTime < 110;
-  if (!inputIsActive) scrollInputSpeed *= Math.exp(-deltaTime / 120);
-  const velocityFactor = clamp(scrollInputSpeed / 2.2);
-  const responseTime = 70 + velocityFactor * 90;
-  const damping = 1 - Math.exp(-deltaTime / responseTime);
-  const maxProgressPerSecond = 2.4 - velocityFactor * .8;
+  const damping = 1 - Math.exp(-deltaTime / 45);
   cinematicFrameTime = frameTime;
 
   if (!active && cinematicOffersActive === false) return;
@@ -422,23 +335,15 @@ function renderCinematicOffers(frameTime = performance.now()) {
 
     const rect = offer.stage.getBoundingClientRect();
     const distance = Math.max(1, offer.stage.offsetHeight - frameHeight);
-    const snapOffset = Math.round(distance * offer.snapProgress);
     const targetProgress = clamp(-rect.top / distance);
     const nearViewport = rect.bottom > -frameHeight * .2 && rect.top < frameHeight * 1.2;
-
-    if (snapOffset !== offer.lastSnapOffset) {
-      offer.stage.style.setProperty('--cin-snap-offset', `${snapOffset}px`);
-      offer.lastSnapOffset = snapOffset;
-    }
 
     if (offer.currentProgress === null || !nearViewport) {
       offer.currentProgress = targetProgress;
     } else {
       const delta = targetProgress - offer.currentProgress;
       if (Math.abs(delta) > .001) {
-        const dampedStep = delta * damping;
-        const maxStep = maxProgressPerSecond * deltaTime / 1000;
-        offer.currentProgress += clamp(dampedStep, -maxStep, maxStep);
+        offer.currentProgress += delta * damping;
         needsAnotherFrame = true;
       } else {
         offer.currentProgress = targetProgress;
@@ -503,14 +408,13 @@ const renderHero = (frameTime) => {
   renderCinematicOffers(frameTime);
   const desktopHeroActive = Boolean(heroStage && desktopMotion.matches && !reducedMotion.matches);
   heroStage?.classList.toggle('is-desktop-cinematic', desktopHeroActive);
-  document.documentElement.classList.toggle('has-cinematic-snap', desktopHeroActive);
   if (heroStage && (tabletHero.matches || desktopHeroActive) && !reducedMotion.matches) {
     const frameHeight = measureStableViewportHeight();
     const rect = heroStage.getBoundingClientRect();
     const distance = Math.max(1, heroStage.offsetHeight - frameHeight);
     const progress = clamp(-rect.top / distance);
     const cinematic = smootherstep(0, 1, progress);
-    const zoom = 1 + cinematic * 2.4;
+    const zoom = 1 + cinematic * (desktopHeroActive ? .18 : 2.4);
     const fade = desktopHeroActive
       ? 1 - smoothstep(.9, .995, progress)
       : 1 - smoothstep(.94, 1, progress);
@@ -521,7 +425,6 @@ const renderHero = (frameTime) => {
         : smoothstep(.84, 1, progress))
     );
     const stageFade = desktopHeroActive ? 1 - smoothstep(.94, 1, progress) : 1;
-    const cover = desktopHeroActive ? smoothstep(.42, .76, progress) : 0;
     const nextDesktopHeroComplete = desktopHeroActive && progress >= .99;
 
     if (nextDesktopHeroComplete !== desktopHeroComplete) {
@@ -547,7 +450,6 @@ const renderHero = (frameTime) => {
     heroStage.style.setProperty('--hero-copy-fade', copyFade.toFixed(4));
     heroStage.style.setProperty('--hero-bloom', bloom.toFixed(4));
     heroStage.style.setProperty('--hero-stage-fade', stageFade.toFixed(4));
-    heroStage.style.setProperty('--hero-cover', cover.toFixed(4));
     heroStage.style.setProperty('pointer-events', progress >= .84 ? 'none' : 'auto');
     return;
   }
@@ -575,7 +477,6 @@ const renderHero = (frameTime) => {
     heroStage?.style.removeProperty('--hero-copy-fade');
     heroStage?.style.removeProperty('--hero-bloom');
     heroStage?.style.removeProperty('--hero-stage-fade');
-    heroStage?.style.removeProperty('--hero-cover');
     heroStage?.style.removeProperty('pointer-events');
     return;
   }
@@ -623,20 +524,7 @@ const requestHeroRender = () => {
   if (!heroFrame) heroFrame = window.requestAnimationFrame(renderHero);
 };
 
-const handleScrollMotion = () => {
-  const now = performance.now();
-  const elapsed = clamp(now - lastScrollSampleTime, 8, 120);
-  const distance = Math.abs(window.scrollY - lastScrollSampleY);
-  const instantaneousSpeed = distance / elapsed;
-
-  scrollInputSpeed = scrollInputSpeed * .35 + instantaneousSpeed * .65;
-  lastScrollSampleY = window.scrollY;
-  lastScrollSampleTime = now;
-  lastScrollInputTime = now;
-  requestHeroRender();
-};
-
-window.addEventListener('scroll', handleScrollMotion, { passive: true });
+window.addEventListener('scroll', requestHeroRender, { passive: true });
 window.addEventListener('resize', requestHeroRender, { passive: true });
 mobileHero.addEventListener('change', requestHeroRender);
 tabletHero.addEventListener('change', requestHeroRender);
