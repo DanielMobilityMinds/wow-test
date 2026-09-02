@@ -76,6 +76,7 @@ const campaignNavIndex = campaignNav?.querySelector('[data-campaign-nav-index]')
 const campaignNavLinks = [...(campaignNav?.querySelectorAll('[data-campaign-nav-link]') ?? [])];
 const campaignNavSections = [heroStage, ...campaignNavLinks.map((link) => document.querySelector(link.hash))].filter(Boolean);
 let currentCampaignSectionId = 'top';
+let desktopHeroComplete = false;
 
 const setCampaignNavSection = (sectionId) => {
   currentCampaignSectionId = sectionId;
@@ -86,7 +87,8 @@ const setCampaignNavSection = (sectionId) => {
   });
   if (campaignNavIndex && activeIndex >= 0) campaignNavIndex.textContent = String(activeIndex + 1).padStart(2, '0');
 
-  const visible = desktopMotion.matches && activeIndex >= 0;
+  const desktopSceneReady = !heroStage || reducedMotion.matches || desktopHeroComplete;
+  const visible = desktopMotion.matches && desktopSceneReady && activeIndex >= 0;
   campaignNav?.classList.toggle('is-visible', visible);
   campaignNav?.setAttribute('aria-hidden', String(!visible));
   if (campaignNav) campaignNav.inert = !visible;
@@ -417,6 +419,12 @@ const renderHero = (frameTime) => {
     const copyFade = 1 - smoothstep(.05, .3, progress);
     const bloom = smoothstep(.18, .62, progress) * (1 - smoothstep(.84, 1, progress));
     const stageFade = 1 - smoothstep(.84, 1, progress);
+    const nextDesktopHeroComplete = desktopHeroActive && progress >= .99;
+
+    if (nextDesktopHeroComplete !== desktopHeroComplete) {
+      desktopHeroComplete = nextDesktopHeroComplete;
+      syncCampaignNavForViewport();
+    }
 
     if (siteHeader) {
       siteHeader.style.removeProperty('opacity');
