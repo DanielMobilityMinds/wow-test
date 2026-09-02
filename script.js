@@ -1,3 +1,58 @@
+window.dataLayer = window.dataLayer || [];
+
+const trackingContext = {
+  pageType: 'campaign',
+  pageName: 'WOW Angebote',
+  campaignName: 'WOW Angebote 2026',
+};
+
+const parseTrackingPayload = (value, source) => {
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    console.warn(`Ungültiges Tracking-Attribut an ${source}:`, error);
+    return null;
+  }
+};
+
+const pushTrackingEvent = (payload) => {
+  if (!payload || typeof payload !== 'object') return;
+  const trackingEvent = {
+    ...trackingContext,
+    pagePath: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+    ...payload,
+  };
+  window.dataLayer.push(trackingEvent);
+  document.dispatchEvent(new CustomEvent('wow:tracking', { detail: trackingEvent }));
+};
+
+const addNavigationTracking = (selector, eventName) => {
+  document.querySelectorAll(selector).forEach((link) => {
+    if (link.hasAttribute('data-ga4push')) return;
+    link.setAttribute('data-ga4push', JSON.stringify({
+      eventName,
+      clickText: link.textContent.trim().replace(/\s+/g, ' '),
+      clickURL: link.getAttribute('href'),
+    }));
+  });
+};
+
+addNavigationTracking('.desktop-nav a, .brand', 'navigation_meta');
+addNavigationTracking('.mobile-nav a', 'navigation_overlay');
+addNavigationTracking('.campaign-nav a', 'navigation_focus');
+
+document.querySelectorAll('[data-page]').forEach((element) => {
+  pushTrackingEvent(parseTrackingPayload(element.getAttribute('data-page'), 'data-page'));
+});
+
+document.addEventListener('click', (event) => {
+  const trackingTarget = event.target.closest('[data-ga4push]');
+  if (!trackingTarget) return;
+  pushTrackingEvent(parseTrackingPayload(trackingTarget.getAttribute('data-ga4push'), 'data-ga4push'));
+});
+
+window.wowTracking = Object.freeze({ push: pushTrackingEvent });
+
 const heroStage = document.querySelector('[data-hero-stage]');
 const siteHeader = document.querySelector('.site-header');
 const menuButton = document.querySelector('.menu-button');

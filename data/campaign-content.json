@@ -117,8 +117,8 @@
       "vehicleAsset": "assets/s7_L200_front-left_W19_konter_RGB.png",
       "description": "Ab Jahresende 2026 wieder zu haben. Unser L200 ist ein robuster, vielseitiger Pick-up mit ausgeprägten Offroad-Qualitäten, hoher Geländetauglichkeit und alltagstauglichem Komfort.",
       "legalPlaceholder": "Verbrauchs- und Effizienzwerte werden ergänzt.",
-      "ctaLabel": "Mehr zum L200",
-      "ctaTarget": "https://www.mitsubishi-motors.de/l200",
+      "ctaLabel": "Angebot anfragen",
+      "ctaTarget": "https://www.mitsubishi-motors.de/kontakt",
       "officialReference": "https://www.mitsubishi-motors.de/l200",
       "needsClientApproval": ["launchDate", "price", "ctaTarget", "legalCopy"]
     }
@@ -127,6 +127,7 @@
     "renderTarget": "TYPO3 Content Block or Fluid partial",
     "ctaMode": "external-model-pages",
     "consentManager": "pending-client-configuration",
-    "tracking": "pending-client-tracking-plan"
+    "tracking": "mitsubishi-compatible-data-layer-ready",
+    "trackingContainer": "pending-client-configuration"
   }
 }

@@ -23,3 +23,9 @@ Danach `http://localhost:4173/` im Browser öffnen.
 - `script.js` – Navigation, Interaktionen und Animationen
 - `assets/` – Bilder, Logo und Schriften
 - `data/campaign-content.json` – strukturierte Kampagnendaten
+
+## Tagging
+
+Die Seite nutzt das Mitsubishi-Muster `data-page` und `data-ga4push`. Beim Laden und bei markierten Klicks werden strukturierte Objekte in `window.dataLayer` geschrieben. Erfasst werden Seitenaufruf, Desktop-, Mobile- und Kampagnennavigation sowie Angebots-, Probefahrt- und Inhalts-CTAs.
+
+Die Instrumentierung selbst überträgt keine Daten. Ein Consentmanager und ein GTM-Container werden erst nach Freigabe für die spätere Produktionsdomain ergänzt. Für lokale QA steht `window.wowTracking.push({...})` zur Verfügung; außerdem wird nach jedem Push das DOM-Event `wow:tracking` ausgelöst.
