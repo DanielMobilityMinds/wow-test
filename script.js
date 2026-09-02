@@ -414,11 +414,17 @@ const renderHero = (frameTime) => {
     const distance = Math.max(1, heroStage.offsetHeight - frameHeight);
     const progress = clamp(-rect.top / distance);
     const cinematic = smootherstep(0, 1, progress);
-    const zoom = 1 + cinematic * 2.4;
-    const fade = 1 - smoothstep(.94, 1, progress);
+    const zoom = 1 + cinematic * (desktopHeroActive ? .18 : 2.4);
+    const fade = desktopHeroActive
+      ? 1 - smoothstep(.9, .995, progress)
+      : 1 - smoothstep(.94, 1, progress);
     const copyFade = 1 - smoothstep(.05, .3, progress);
-    const bloom = smoothstep(.18, .62, progress) * (1 - smoothstep(.84, 1, progress));
-    const stageFade = 1 - smoothstep(.84, 1, progress);
+    const bloom = smoothstep(.18, .62, progress) * (
+      1 - (desktopHeroActive
+        ? smoothstep(.86, .98, progress)
+        : smoothstep(.84, 1, progress))
+    );
+    const stageFade = desktopHeroActive ? 1 - smoothstep(.94, 1, progress) : 1;
     const nextDesktopHeroComplete = desktopHeroActive && progress >= .99;
 
     if (nextDesktopHeroComplete !== desktopHeroComplete) {
