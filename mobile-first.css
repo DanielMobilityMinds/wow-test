@@ -374,6 +374,22 @@ a { color: inherit; }
 }
 
 .offer__copy > .cta { grid-area: cta; z-index: 5; width: 100%; margin: 4px 0 14px; }
+.offer__actions {
+  grid-area: cta;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  margin: 4px 0 14px;
+  display: grid;
+  gap: 10px;
+}
+.offer__action-copy {
+  margin: 0 0 2px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.offer__actions .cta { width: 100%; }
+.offer__actions .cta--secondary { background: rgba(0, 0, 0, .08); }
 .offer__visual { display: contents; }
 .offer__car {
   grid-area: car;
@@ -877,6 +893,15 @@ a { color: inherit; }
     margin: clamp(18px, 2.4svh, 28px) 0 0;
   }
 
+  .offer__actions {
+    width: min(100%, 400px);
+    margin: clamp(18px, 2.4svh, 28px) 0 0;
+    gap: 10px;
+  }
+
+  .offer__actions .cta { min-height: 64px; }
+  .offer__action-copy { font-size: 16px; }
+
   .offer__visual {
     grid-area: auto;
     grid-column: 1;
@@ -922,6 +947,7 @@ a { color: inherit; }
   .has-motion .offer__visual .wallbox-badge,
   .has-motion .offer__visual .offer__subsidy,
   .has-motion .offer__copy > .cta,
+  .has-motion .offer__actions,
   .has-motion .offer .offer__legal {
     will-change: transform, opacity;
   }
@@ -1095,6 +1121,11 @@ a { color: inherit; }
       margin-top: clamp(18px, 3.5svh, 28px);
     }
 
+    .offer__actions {
+      width: min(100%, 400px);
+      margin-top: clamp(18px, 3.5svh, 28px);
+    }
+
     .offer__visual {
       grid-column: 2;
       grid-row: 1;
@@ -1185,6 +1216,7 @@ a { color: inherit; }
     .offer__visual .wallbox-badge,
     .offer__visual .offer__subsidy,
     .offer__copy > .cta,
+    .offer__actions,
     .offer .offer__legal { will-change: auto; }
   }
 }
@@ -1500,6 +1532,25 @@ a { color: inherit; }
     font-size: 18px;
   }
 
+  .offer__actions {
+    z-index: 7;
+    width: min(100%, 320px);
+    margin-top: 22px;
+    margin-bottom: 0;
+    gap: 8px;
+  }
+
+  .offer__actions .cta {
+    min-height: 58px;
+    font-size: 17px;
+  }
+
+  .offer__action-copy {
+    margin-bottom: 2px;
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
   .offer__visual {
     grid-area: auto;
     grid-column: 2;
@@ -1579,7 +1630,7 @@ a { color: inherit; }
   .offer--l200 .offer__from strong { font-size: 40px; }
   .offer--eclipse h2 { white-space: nowrap; }
   .offer--eclipse .offer__availability { margin-top: 32px; }
-  .offer--eclipse .cta { margin-top: 45px; }
+  .offer--eclipse .offer__actions { margin-top: 22px; }
   .offer--eclipse { --extra-base-y: -58px; }
   .offer--eclipse .offer__subsidy {
     width: 210px;
@@ -1610,6 +1661,7 @@ a { color: inherit; }
   .offer.is-cinematic .wallbox-badge,
   .offer.is-cinematic .offer__subsidy,
   .offer.is-cinematic .offer__copy > .cta,
+  .offer.is-cinematic .offer__actions,
   .offer.is-cinematic .offer__legal {
     transition: none;
   }
@@ -1682,7 +1734,17 @@ a { color: inherit; }
     will-change: auto;
   }
 
-  .offer.is-cinematic.is-cinematic-actions-ready .offer__copy > .cta {
+  .offer.is-cinematic .offer__actions {
+    visibility: hidden;
+    opacity: 1;
+    clip-path: inset(0 var(--cin-cta-clip, 0%) 0 0);
+    transform: translate3d(var(--cin-cta-x, 0px), 0, 0) scale(var(--cin-cta-scale, 1));
+    transform-origin: left center;
+    will-change: auto;
+  }
+
+  .offer.is-cinematic.is-cinematic-actions-ready .offer__copy > .cta,
+  .offer.is-cinematic.is-cinematic-actions-ready .offer__actions {
     visibility: visible;
   }
 
@@ -1704,6 +1766,7 @@ a { color: inherit; }
   .offer.is-cinematic:not(.is-cinematic-active) .wallbox-badge,
   .offer.is-cinematic:not(.is-cinematic-active) .offer__subsidy,
   .offer.is-cinematic:not(.is-cinematic-active) .offer__copy > .cta,
+  .offer.is-cinematic:not(.is-cinematic-active) .offer__actions,
   .offer.is-cinematic:not(.is-cinematic-active) .offer__legal {
     will-change: auto;
   }
@@ -1716,7 +1779,8 @@ a { color: inherit; }
     will-change: transform, opacity;
   }
 
-  .offer.is-cinematic.is-cinematic-active .offer__copy > .cta {
+  .offer.is-cinematic.is-cinematic-active .offer__copy > .cta,
+  .offer.is-cinematic.is-cinematic-active .offer__actions {
     will-change: transform, clip-path;
   }
 
@@ -1821,6 +1885,19 @@ a { color: inherit; }
     min-height: clamp(54px, calc(3.684svh + 33.4px), 68px);
     margin-top: clamp(16px, calc(20.789svh - 100.4px), 95px);
     font-size: clamp(16px, calc(.526svh + 13.1px), 18px);
+  }
+  .offer__actions {
+    margin-top: clamp(10px, calc(3.158svh - 7.7px), 22px);
+    gap: clamp(6px, calc(.526svh + 3.1px), 8px);
+  }
+  .offer__actions .cta {
+    min-height: clamp(44px, calc(3.684svh + 23.4px), 58px);
+    padding-block: clamp(8px, calc(1.053svh + 2.1px), 12px);
+    font-size: clamp(15px, calc(.526svh + 12.1px), 17px);
+  }
+  .offer__action-copy {
+    font-size: clamp(13px, calc(.789svh + 8.6px), 16px);
+    line-height: 1.2;
   }
   .offer__visual .offer__car,
   .offer--outlander .offer__car,

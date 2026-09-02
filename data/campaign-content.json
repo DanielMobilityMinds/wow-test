@@ -31,6 +31,9 @@
       "vehicleAsset": "assets/asx.webp",
       "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/asx",
+      "actionCopy": "Den ASX testen oder direkt ein Angebot anfragen?",
+      "testDriveLabel": "Probefahrt anfragen",
+      "testDriveTarget": "https://www.mitsubishi-motors.de/probefahrt/asx",
       "officialReference": "https://www.mitsubishi-motors.de/asx",
       "needsClientApproval": ["financingTerms", "footnoteReference"]
     },
@@ -45,6 +48,9 @@
       "vehicleAsset": "assets/grandis.webp",
       "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/grandis",
+      "actionCopy": "Den Grandis kennenlernen oder gleich ein Angebot erhalten?",
+      "testDriveLabel": "Probefahrt anfragen",
+      "testDriveTarget": "https://www.mitsubishi-motors.de/probefahrt/grandis",
       "officialReference": "https://www.mitsubishi-motors.de/grandis",
       "needsClientApproval": ["financingTerms", "footnoteReference"]
     },
@@ -60,6 +66,9 @@
       "vehicleAsset": "assets/vehicles/outlander-diamant.webp",
       "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
+      "actionCopy": "Den Outlander testen oder Angebot erhalten. Welcher ist Ihr nächster Schritt?",
+      "testDriveLabel": "Probefahrt anfragen",
+      "testDriveTarget": "https://www.mitsubishi-motors.de/probefahrt/outlander",
       "officialReference": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "needsClientApproval": ["wallboxInclusion", "legalCopy", "campaignValidity"]
     },
@@ -75,6 +84,9 @@
       "vehicleAsset": "assets/vehicles/outlander-black.webp",
       "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
+      "actionCopy": "Den Outlander testen oder Angebot erhalten. Welcher ist Ihr nächster Schritt?",
+      "testDriveLabel": "Probefahrt anfragen",
+      "testDriveTarget": "https://www.mitsubishi-motors.de/probefahrt/outlander",
       "officialReference": "https://www.mitsubishi-motors.de/outlander-plug-in-hybrid",
       "needsClientApproval": ["wallboxInclusion", "legalCopy", "campaignValidity"]
     },
@@ -89,6 +101,9 @@
       "vehicleAsset": "assets/s6_Eclipse_Cross_Konter_rgb_11.png",
       "ctaLabel": "Angebot anfragen",
       "ctaTarget": "https://www.mitsubishi-motors.de/eclipse-cross",
+      "actionCopy": "Probefahrt vereinbaren oder Angebot anfragen? Sie haben die Wahl.",
+      "testDriveLabel": "Probefahrt anfragen",
+      "testDriveTarget": "https://www.mitsubishi-motors.de/probefahrt/eclipse-cross",
       "officialReference": "https://www.mitsubishi-motors.de/eclipse-cross",
       "needsClientApproval": ["availability", "subsidyClaim", "batteryVariant", "legalCopy"]
     },
