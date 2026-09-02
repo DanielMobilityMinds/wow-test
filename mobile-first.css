@@ -1479,6 +1479,16 @@ a { color: inherit; }
     overflow: clip;
     display: block;
     opacity: var(--hero-stage-fade, 1);
+    background: linear-gradient(
+      180deg,
+      #fff 0%,
+      #fffdfa 12%,
+      #fff8f2 28%,
+      #ffede4 46%,
+      #ffddd1 64%,
+      #ffc9bb 82%,
+      #ffbcbc 100%
+    );
     scroll-snap-align: start;
     scroll-snap-stop: normal;
   }
@@ -1495,7 +1505,14 @@ a { color: inherit; }
   .hero.is-desktop-cinematic .hero__motion::before {
     display: block;
     inset: 0;
-    background: #ffbcbc;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 248, 242, .2) 18%,
+      rgba(255, 224, 211, .54) 48%,
+      rgba(255, 182, 166, .82) 76%,
+      #ff8b91 100%
+    );
     opacity: var(--hero-cover);
     transform: none;
   }

@@ -72,6 +72,8 @@ let lastScrollSampleY = window.scrollY;
 let lastScrollSampleTime = performance.now();
 let lastScrollInputTime = 0;
 let scrollInputSpeed = 0;
+let cinematicWheelLock = null;
+let cinematicWheelReleaseTimer = 0;
 
 document.documentElement.classList.add('has-motion');
 
@@ -290,6 +292,61 @@ const cinematicOffers = [
       lastSnapOffset: null,
     };
   });
+
+const releaseCinematicWheelLock = () => {
+  cinematicWheelLock = null;
+  window.clearTimeout(cinematicWheelReleaseTimer);
+  cinematicWheelReleaseTimer = 0;
+};
+
+const scheduleCinematicWheelRelease = () => {
+  window.clearTimeout(cinematicWheelReleaseTimer);
+  cinematicWheelReleaseTimer = window.setTimeout(releaseCinematicWheelLock, 220);
+};
+
+const handleCinematicWheel = (event) => {
+  const active = desktopMotion.matches
+    && !reducedMotion.matches
+    && document.documentElement.classList.contains('has-cinematic-snap');
+  if (!active || event.ctrlKey) {
+    releaseCinematicWheelLock();
+    return;
+  }
+
+  const deltaMultiplier = event.deltaMode === WheelEvent.DOM_DELTA_LINE
+    ? 16
+    : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+      ? window.innerHeight
+      : 1;
+  const deltaY = event.deltaY * deltaMultiplier;
+  if (!deltaY || Math.abs(deltaY) <= Math.abs(event.deltaX * deltaMultiplier)) return;
+
+  const direction = Math.sign(deltaY);
+  if (cinematicWheelLock?.direction === direction) {
+    event.preventDefault();
+    scheduleCinematicWheelRelease();
+    return;
+  }
+  if (cinematicWheelLock) releaseCinematicWheelLock();
+
+  const currentY = window.scrollY;
+  const projectedY = currentY + deltaY;
+  const snapPositions = cinematicOffers
+    .map((offer) => window.scrollY + offer.elements.snapPoint.getBoundingClientRect().top)
+    .sort((a, b) => a - b);
+  const crossedSnap = direction > 0
+    ? snapPositions.find((position) => position > currentY + 2 && position <= projectedY + 2)
+    : snapPositions.findLast((position) => position < currentY - 2 && position >= projectedY - 2);
+
+  if (!Number.isFinite(crossedSnap)) return;
+
+  event.preventDefault();
+  cinematicWheelLock = { direction, position: crossedSnap };
+  window.scrollTo({ top: crossedSnap, behavior: 'smooth' });
+  scheduleCinematicWheelRelease();
+};
+
+window.addEventListener('wheel', handleCinematicWheel, { passive: false });
 
 campaignNavLinks.forEach((link) => {
   link.addEventListener('click', (event) => {
