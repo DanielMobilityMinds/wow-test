@@ -1368,7 +1368,7 @@ a { color: inherit; }
   :root { --header-h: 90px; --gutter: 44px; --radius: 52px; }
 
   .offer-flow { margin-top: 0; }
-  .offer-flow > .offer + .offer { margin-top: 0; }
+  .offer-flow > .offer + .offer { margin-top: -1px; }
 
   .offer--asx {
     --car-fluid: 124%;
