@@ -1255,6 +1255,7 @@ a { color: inherit; }
  */
 @media (min-width: 1200px) {
   :root { --header-h: 90px; --gutter: 44px; --radius: 52px; }
+  html.has-cinematic-snap { scroll-snap-type: y proximity; }
 
   .offer-flow {
     position: relative;
@@ -1478,6 +1479,8 @@ a { color: inherit; }
     overflow: clip;
     display: block;
     opacity: var(--hero-stage-fade, 1);
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 
   .hero.is-desktop-cinematic .hero__motion {
@@ -1690,6 +1693,17 @@ a { color: inherit; }
     overflow: visible;
   }
 
+  .offer.is-cinematic > .cinematic-snap-point {
+    position: absolute;
+    top: var(--cin-snap-offset, 0px);
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
   .offer.is-cinematic .offer__copy > h2,
   .offer.is-cinematic .offer__eyebrow,
   .offer.is-cinematic .offer__payment,
@@ -1862,6 +1876,7 @@ a { color: inherit; }
   .fineprint__inner { width: min(calc(100% - 200px), 1240px); }
 
   @media (prefers-reduced-motion: reduce) {
+    html.has-cinematic-snap { scroll-snap-type: none; }
     .offer.is-cinematic { min-height: 100svh; }
     .offer.is-cinematic > .offer__inner { position: relative; }
   }

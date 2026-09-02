@@ -258,18 +258,38 @@ const cinematicOffers = [
 ]
   .map((config) => ({ ...config, stage: document.querySelector(config.selector) }))
   .filter((offer) => offer.stage)
-  .map((offer) => ({
-    ...offer,
-    elements: {
-      price: offer.stage.querySelector('.price-art, .coming'),
-      car: offer.stage.querySelector('.offer__car'),
-      extra: offer.stage.querySelector('.wallbox-badge'),
-      subsidy: offer.stage.querySelector('.offer__subsidy'),
-      cta: offer.stage.querySelector('.offer__actions, .offer__copy > .cta'),
-    },
-    currentProgress: null,
-    lastWrittenProgress: null,
-  }));
+  .map((offer) => {
+    const snapPoint = document.createElement('span');
+    const snapProgress = clamp(Math.max(
+      offer.price.end,
+      offer.car.end,
+      offer.copy.end,
+      offer.cta + .08,
+      offer.extra?.end ?? 0,
+      offer.subsidy?.end ?? 0,
+      .6,
+    ) + .04, .7, .9);
+
+    snapPoint.className = 'cinematic-snap-point';
+    snapPoint.setAttribute('aria-hidden', 'true');
+    offer.stage.append(snapPoint);
+
+    return {
+      ...offer,
+      snapProgress,
+      elements: {
+        price: offer.stage.querySelector('.price-art, .coming'),
+        car: offer.stage.querySelector('.offer__car'),
+        extra: offer.stage.querySelector('.wallbox-badge'),
+        subsidy: offer.stage.querySelector('.offer__subsidy'),
+        cta: offer.stage.querySelector('.offer__actions, .offer__copy > .cta'),
+        snapPoint,
+      },
+      currentProgress: null,
+      lastWrittenProgress: null,
+      lastSnapOffset: null,
+    };
+  });
 
 campaignNavLinks.forEach((link) => {
   link.addEventListener('click', (event) => {
@@ -299,7 +319,7 @@ const cinematicProperties = [
   '--cin-car-p', '--cin-car-x', '--cin-car-y', '--cin-car-scale', '--cin-car-rotate',
   '--cin-extra-p', '--cin-extra-x', '--cin-extra-y', '--cin-extra-scale',
   '--cin-subsidy-p', '--cin-subsidy-x', '--cin-subsidy-y', '--cin-subsidy-scale',
-  '--cin-cta-p', '--cin-legal-p', '--cin-detail-p',
+  '--cin-cta-p', '--cin-legal-p', '--cin-detail-p', '--cin-snap-offset',
 ];
 
 const setCinematicNumber = (stage, property, value) => {
@@ -312,6 +332,7 @@ const clearCinematicOffer = (offer) => {
   if (offer.elements.cta) offer.elements.cta.inert = false;
   offer.currentProgress = null;
   offer.lastWrittenProgress = null;
+  offer.lastSnapOffset = null;
   cinematicFrameTime = null;
 };
 
@@ -344,8 +365,14 @@ function renderCinematicOffers(frameTime = performance.now()) {
 
     const rect = offer.stage.getBoundingClientRect();
     const distance = Math.max(1, offer.stage.offsetHeight - frameHeight);
+    const snapOffset = Math.round(distance * offer.snapProgress);
     const targetProgress = clamp(-rect.top / distance);
     const nearViewport = rect.bottom > -frameHeight * .2 && rect.top < frameHeight * 1.2;
+
+    if (snapOffset !== offer.lastSnapOffset) {
+      offer.stage.style.setProperty('--cin-snap-offset', `${snapOffset}px`);
+      offer.lastSnapOffset = snapOffset;
+    }
 
     if (offer.currentProgress === null || !nearViewport) {
       offer.currentProgress = targetProgress;
@@ -419,6 +446,7 @@ const renderHero = (frameTime) => {
   renderCinematicOffers(frameTime);
   const desktopHeroActive = Boolean(heroStage && desktopMotion.matches && !reducedMotion.matches);
   heroStage?.classList.toggle('is-desktop-cinematic', desktopHeroActive);
+  document.documentElement.classList.toggle('has-cinematic-snap', desktopHeroActive);
   if (heroStage && (tabletHero.matches || desktopHeroActive) && !reducedMotion.matches) {
     const frameHeight = measureStableViewportHeight();
     const rect = heroStage.getBoundingClientRect();
