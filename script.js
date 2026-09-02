@@ -57,16 +57,15 @@ const heroStage = document.querySelector('[data-hero-stage]');
 const siteHeader = document.querySelector('.site-header');
 const menuButton = document.querySelector('.menu-button');
 const mobileNav = document.querySelector('.mobile-nav');
-const mobileHero = window.matchMedia('(max-width: 719px)');
-const tabletHero = window.matchMedia('(min-width: 720px) and (max-width: 1024px), (min-width: 1025px) and (max-width: 1366px) and (max-aspect-ratio: 1499/1000)');
-const desktopMotion = window.matchMedia('(min-width: 1367px), (min-width: 1025px) and (min-aspect-ratio: 3/2)');
+const mobileHero = window.matchMedia('(max-width: 699px)');
+const tabletHero = window.matchMedia('(min-width: 700px) and (max-width: 1199px)');
+const desktopMotion = window.matchMedia('(min-width: 1200px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const mobileDisclosure = window.matchMedia('(max-width: 719px)');
+const mobileDisclosure = window.matchMedia('(max-width: 699px)');
 const supportsScrollPin = CSS.supports?.('animation-timeline: scroll()') ?? false;
 let heroFrame = 0;
 let heroViewportHeight = 0;
 let heroViewportWidth = 0;
-let kineticCardsActive = null;
 let cinematicOffersActive = null;
 let cinematicFrameTime = null;
 
@@ -209,193 +208,9 @@ const smootherstep = (from, to, value) => {
   const progress = clamp((value - from) / (to - from));
   return progress * progress * progress * (progress * (progress * 6 - 15) + 10);
 };
-const easeOutBack = (progress) => {
-  const amount = clamp(progress);
-  const overshoot = 1.70158;
-  return 1 + (overshoot + 1) * ((amount - 1) ** 3) + overshoot * ((amount - 1) ** 2);
-};
-
-const kineticCards = [
-  {
-    stage: document.querySelector('.offer--asx'),
-    model: '[data-asx-model]', price: '[data-asx-price]', car: '[data-asx-car]',
-    cta: '.offer__actions', legal: '[data-asx-legal]',
-    modelY: 32, priceX: -48, priceY: 12, priceScale: .92,
-    carX: 54, carY: 18, carScale: .94,
-  },
-  {
-    stage: document.querySelector('[data-grandis-stage]'),
-    model: '[data-grandis-model]', price: '[data-grandis-price]', car: '[data-grandis-car]',
-    cta: '.offer__actions', legal: '[data-grandis-legal]',
-    modelY: 30, priceX: -44, priceY: 12, priceScale: .93,
-    carX: 48, carY: 16, carScale: .95,
-  },
-  {
-    stage: document.querySelector('.offer--outlander'),
-    model: '.offer__copy > h2, .offer__copy > .offer__eyebrow, .offer__copy > .offer__payment',
-    price: '.price-art', car: '.offer__car', cta: '.offer__actions', legal: '.offer__legal',
-    extra: '.wallbox-badge',
-    modelY: 30, priceX: -46, priceY: 12, priceScale: .93,
-    carX: 52, carY: 17, carScale: .945,
-  },
-  {
-    stage: document.querySelector('.offer--black'),
-    model: '.offer__copy > h2, .offer__copy > .offer__eyebrow, .offer__copy > .offer__payment',
-    price: '.price-art', car: '.offer__car', cta: '.offer__actions', legal: '.offer__legal',
-    extra: '.wallbox-badge',
-    modelY: 30, priceX: -46, priceY: 12, priceScale: .93,
-    carX: 50, carY: 17, carScale: .945,
-  },
-  {
-    stage: document.querySelector('.offer--eclipse'),
-    model: '.offer__copy > h2, .offer__copy > .offer__eyebrow',
-    price: '.price-art', car: '.offer__car', cta: '.offer__actions', legal: '.offer__legal',
-    details: '.offer__availability', extra: '.wallbox-badge', subsidy: '.offer__subsidy',
-    modelY: 30, priceX: -44, priceY: 12, priceScale: .93,
-    carX: 48, carY: 16, carScale: .95,
-  },
-  {
-    stage: document.querySelector('.offer--l200'),
-    model: '.offer__copy > h2', price: '.coming', car: '.offer__car', cta: '.offer__copy > .cta', legal: '.offer__legal',
-    details: '.offer__description, .offer__from',
-    modelY: 32, priceX: -48, priceY: 12, priceScale: .92,
-    carX: 56, carY: 18, carScale: .94,
-  },
-]
-  .filter((card) => card.stage)
-  .map((card) => {
-    const models = [...card.stage.querySelectorAll(card.model)];
-    const details = card.details ? [...card.stage.querySelectorAll(card.details)] : [];
-    const price = card.stage.querySelector(card.price);
-    const car = card.stage.querySelector(card.car);
-    const cta = card.stage.querySelector(card.cta);
-    const legal = card.legal ? card.stage.querySelector(card.legal) : null;
-    const extra = card.extra ? card.stage.querySelector(card.extra) : null;
-    const subsidy = card.subsidy ? card.stage.querySelector(card.subsidy) : null;
-
-    return {
-      ...card,
-      elements: { models, details, price, car, cta, legal, extra, subsidy },
-      animatedElements: [
-        ...models, price, car, cta, legal, ...details, extra, subsidy,
-      ].filter(Boolean),
-    };
-  });
-
-const clearKineticStyle = (element) => {
-  if (!element) return;
-  [
-    'opacity', 'transform', 'clip-path', 'transition',
-    '--motion-x', '--motion-y', '--motion-scale',
-  ].forEach((property) => element.style.removeProperty(property));
-};
-
-const applyKineticStyle = (element, progress, x, y, scale = 1, clipped = false) => {
-  if (!element) return;
-  const inverse = 1 - progress;
-  const currentScale = scale + (1 - scale) * progress;
-  element.style.setProperty('opacity', progress.toFixed(4));
-  element.style.setProperty('transform', `translate3d(${(x * inverse).toFixed(2)}px, ${(y * inverse).toFixed(2)}px, 0) scale(${currentScale.toFixed(4)})`);
-  element.style.setProperty('transition', 'none');
-  if (clipped) element.style.setProperty('clip-path', `inset(${(inverse * 100).toFixed(2)}% 0 0 0)`);
-};
-
-const applyKineticCarStyle = (element, progress, x, y, scale = 1) => {
-  if (!element) return;
-  const inverse = 1 - progress;
-  const currentScale = scale + (1 - scale) * progress;
-  element.style.setProperty('opacity', progress.toFixed(4));
-  element.style.setProperty('--motion-x', `${(x * inverse).toFixed(2)}px`);
-  element.style.setProperty('--motion-y', `${(y * inverse).toFixed(2)}px`);
-  element.style.setProperty('--motion-scale', currentScale.toFixed(4));
-  element.style.setProperty('transition', 'none');
-};
-
-const elementViewportProgress = (element, stage, frameHeight, start, end) => {
-  if (!element) return 0;
-  let offset = 0;
-  let node = element;
-  while (node && node !== stage) {
-    offset += node.offsetTop || 0;
-    node = node.offsetParent;
-  }
-  const layoutTop = node === stage
-    ? stage.getBoundingClientRect().top + offset
-    : element.getBoundingClientRect().top;
-  return clamp((frameHeight * start - layoutTop) / (frameHeight * (start - end)));
-};
-
-function renderKineticCards() {
-  const tabletMotion = tabletHero.matches;
-  const active = (mobileHero.matches || tabletMotion) && !reducedMotion.matches;
-  const frameHeight = tabletMotion ? window.innerHeight : (heroViewportHeight || window.innerHeight);
-
-  if (!active && kineticCardsActive === false) return;
-
-  kineticCards.forEach((card) => {
-    if (!active) {
-      card.animatedElements.forEach(clearKineticStyle);
-      return;
-    }
-
-    const stageRect = card.stage.getBoundingClientRect();
-    if (stageRect.bottom < -frameHeight * .35 || stageRect.top > frameHeight * 1.55) return;
-
-    const { models, details, price, car, cta, legal, extra, subsidy } = card.elements;
-    const distance = tabletMotion ? 1.35 : 1;
-    const modelAnchors = [[.94, .8], [.92, .78], [.9, .76]];
-    models.forEach((element, index) => {
-      const anchors = modelAnchors[index] || modelAnchors.at(-1);
-      const progress = elementViewportProgress(element, card.stage, frameHeight, anchors[0], anchors[1]);
-      applyKineticStyle(element, smootherstep(0, 1, progress), 0, card.modelY * distance, 1, true);
-    });
-
-    const priceProgress = elementViewportProgress(price, card.stage, frameHeight, .88, .67);
-    const carProgress = elementViewportProgress(car, card.stage, frameHeight, .9, .64);
-    applyKineticStyle(
-      price,
-      smootherstep(0, 1, priceProgress),
-      card.priceX * distance,
-      card.priceY * distance,
-      tabletMotion ? card.priceScale - .025 : card.priceScale,
-    );
-    const easedCar = smootherstep(0, 1, carProgress);
-    if (tabletMotion) {
-      applyKineticCarStyle(car, easedCar, 0, card.carY * 2.1, card.carScale - .035);
-    } else {
-      applyKineticStyle(car, easedCar, card.carX, card.carY, card.carScale);
-    }
-    details.forEach((element, index) => {
-      const progress = elementViewportProgress(element, card.stage, frameHeight, 1.02 - index * .02, .84 - index * .02);
-      applyKineticStyle(element, smootherstep(0, 1, progress), 0, 22);
-    });
-    applyKineticStyle(
-      extra,
-      smootherstep(0, 1, elementViewportProgress(extra, card.stage, frameHeight, 1.04, .84)),
-      tabletMotion ? 68 : 30,
-      tabletMotion ? -10 : 0,
-      tabletMotion ? .88 : .96,
-    );
-    if (tabletMotion) {
-      applyKineticStyle(
-        subsidy,
-        smootherstep(0, 1, elementViewportProgress(subsidy, card.stage, frameHeight, 1.02, .82)),
-        36,
-        44,
-        .82,
-      );
-    }
-    applyKineticStyle(cta, smootherstep(0, 1, elementViewportProgress(cta, card.stage, frameHeight, 1.06, .88)), 0, 24);
-    applyKineticStyle(legal, smootherstep(0, 1, elementViewportProgress(legal, card.stage, frameHeight, 1.14, .98)), 0, 20);
-  });
-
-  kineticCardsActive = active;
-}
-
 const cinematicOffers = [
   {
     selector: '.offer--asx',
-    entryLead: .75,
     price: { x: .18, y: -.26, scale: .72, start: .04, end: .42, rotate: -.7 },
     car: { x: -.2, y: .3, scale: .52, start: .02, end: .58, rotate: .45 },
     copy: { start: .28, end: .5 }, cta: .58,
@@ -478,7 +293,7 @@ const cinematicProperties = [
   '--cin-car-p', '--cin-car-x', '--cin-car-y', '--cin-car-scale', '--cin-car-rotate',
   '--cin-extra-p', '--cin-extra-x', '--cin-extra-y', '--cin-extra-scale',
   '--cin-subsidy-p', '--cin-subsidy-x', '--cin-subsidy-y', '--cin-subsidy-scale',
-  '--cin-cta-p', '--cin-cta-x', '--cin-cta-scale', '--cin-cta-clip', '--cin-legal-p', '--cin-detail-p',
+  '--cin-cta-p', '--cin-legal-p', '--cin-detail-p',
 ];
 
 const setCinematicNumber = (stage, property, value) => {
@@ -487,7 +302,7 @@ const setCinematicNumber = (stage, property, value) => {
 
 const clearCinematicOffer = (offer) => {
   cinematicProperties.forEach((property) => offer.stage.style.removeProperty(property));
-  offer.stage.classList.remove('is-cinematic', 'is-cinematic-active', 'is-cinematic-actions-ready');
+  offer.stage.classList.remove('is-cinematic', 'is-cinematic-active');
   if (offer.elements.cta) offer.elements.cta.inert = false;
   offer.currentProgress = null;
   offer.lastWrittenProgress = null;
@@ -517,9 +332,8 @@ function renderCinematicOffers(frameTime = performance.now()) {
     }
 
     const rect = offer.stage.getBoundingClientRect();
-    const entryLead = (offer.entryLead ?? 0) * frameHeight;
-    const distance = Math.max(1, offer.stage.offsetHeight - frameHeight + entryLead);
-    const targetProgress = clamp((entryLead - rect.top) / distance);
+    const distance = Math.max(1, offer.stage.offsetHeight - frameHeight);
+    const targetProgress = clamp(-rect.top / distance);
     const nearViewport = rect.bottom > -frameHeight * .2 && rect.top < frameHeight * 1.2;
 
     if (offer.currentProgress === null || !nearViewport) {
@@ -541,16 +355,13 @@ function renderCinematicOffers(frameTime = performance.now()) {
     const legalProgress = smootherstep(.48, .6, progress);
     const ctaStart = offer.cta - .06;
     const ctaEnd = offer.cta + .08;
-    const ctaRawProgress = clamp((progress - ctaStart) / (ctaEnd - ctaStart));
     const ctaProgress = smootherstep(ctaStart, ctaEnd, progress);
-    const ctaImpact = easeOutBack(ctaRawProgress);
     const extraMotion = offer.extra ?? { start: .7, end: .9, x: .12, y: -.08, scale: .72 };
     const subsidyMotion = offer.subsidy ?? { start: .74, end: .92, x: .08, y: .1, scale: .7 };
     const extraProgress = smootherstep(extraMotion.start, extraMotion.end, progress);
     const subsidyProgress = smootherstep(subsidyMotion.start, subsidyMotion.end, progress);
 
     offer.stage.classList.toggle('is-cinematic-active', nearViewport);
-    offer.stage.classList.toggle('is-cinematic-actions-ready', progress >= ctaStart);
     if (offer.elements.cta) offer.elements.cta.inert = progress < offer.cta + .02;
 
     if (!nearViewport && offer.lastWrittenProgress === progress) return;
@@ -580,9 +391,6 @@ function renderCinematicOffers(frameTime = performance.now()) {
       setCinematicNumber(offer.stage, '--cin-subsidy-scale', subsidyMotion.scale + subsidyProgress * (1 - subsidyMotion.scale));
     }
     setCinematicNumber(offer.stage, '--cin-cta-p', ctaProgress);
-    offer.stage.style.setProperty('--cin-cta-x', `${((1 - ctaProgress) * -56).toFixed(2)}px`);
-    setCinematicNumber(offer.stage, '--cin-cta-scale', .84 + ctaImpact * .16);
-    offer.stage.style.setProperty('--cin-cta-clip', `${((1 - ctaProgress) * 100).toFixed(2)}%`);
     setCinematicNumber(offer.stage, '--cin-legal-p', legalProgress);
     setCinematicNumber(offer.stage, '--cin-detail-p', copyProgress);
     offer.lastWrittenProgress = progress;
@@ -608,8 +416,8 @@ const renderHero = (frameTime) => {
     const fade = 1 - smoothstep(.94, 1, progress);
     const copyFade = 1 - smoothstep(.05, .3, progress);
     const bloom = smoothstep(.18, .62, progress) * (1 - smoothstep(.84, 1, progress));
+    const stageFade = 1 - smoothstep(.84, 1, progress);
 
-    renderKineticCards();
     if (siteHeader) {
       siteHeader.style.removeProperty('opacity');
       siteHeader.style.removeProperty('transform');
@@ -627,11 +435,12 @@ const renderHero = (frameTime) => {
     heroStage.style.setProperty('--hero-fade', fade.toFixed(4));
     heroStage.style.setProperty('--hero-copy-fade', copyFade.toFixed(4));
     heroStage.style.setProperty('--hero-bloom', bloom.toFixed(4));
+    heroStage.style.setProperty('--hero-stage-fade', stageFade.toFixed(4));
+    heroStage.style.setProperty('pointer-events', progress >= .84 ? 'none' : 'auto');
     return;
   }
 
   if (!heroStage || !mobileHero.matches || reducedMotion.matches) {
-    renderKineticCards();
     if (!mobileHero.matches) {
       document.documentElement.style.removeProperty('--mobile-frame-h');
       document.documentElement.style.removeProperty('--hero-pin-distance');
@@ -653,6 +462,8 @@ const renderHero = (frameTime) => {
     heroStage?.style.removeProperty('--hero-fade');
     heroStage?.style.removeProperty('--hero-copy-fade');
     heroStage?.style.removeProperty('--hero-bloom');
+    heroStage?.style.removeProperty('--hero-stage-fade');
+    heroStage?.style.removeProperty('pointer-events');
     return;
   }
 
@@ -673,7 +484,6 @@ const renderHero = (frameTime) => {
   const distance = Math.max(1, heroStage.offsetHeight - heroViewportHeight);
   const progress = clamp(-rect.top / distance);
   const pinY = clamp(-rect.top, 0, distance);
-  if (rect.bottom < heroViewportHeight * 1.35) renderKineticCards();
   if (supportsScrollPin) return;
   const cinematic = smoothstep(0, 1, progress);
   const zoom = 1 + cinematic * 5;
