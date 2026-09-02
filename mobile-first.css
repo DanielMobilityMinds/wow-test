@@ -1051,8 +1051,48 @@ a { color: inherit; }
 
   /* Portrait lifts vehicles without a top-right badge into the open visual rail. */
   @media (orientation: portrait) {
+    .offer__inner,
     .offer--l200 .offer__inner {
-      grid-template-rows: auto minmax(340px, 1fr) auto;
+      grid-template-rows: auto;
+    }
+
+    .offer__stage {
+      width: 100%;
+      display: grid;
+      align-content: start;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "title"
+        "eyebrow"
+        "payment"
+        "price"
+        "availability"
+        "car"
+        "description"
+        "from"
+        "cta"
+        "legal";
+    }
+
+    .offer__copy {
+      width: auto;
+      display: contents;
+    }
+
+    .offer__visual {
+      grid-area: car;
+      min-height: clamp(340px, 42svh, 480px);
+      margin-top: clamp(-46px, -4svh, -28px);
+    }
+
+    .offer__actions,
+    .offer__copy > .cta {
+      width: min(100%, 400px);
+      margin-top: 12px;
+    }
+
+    .offer .offer__legal {
+      grid-area: legal;
     }
 
     @media (max-height: 1250px) {
@@ -1063,7 +1103,7 @@ a { color: inherit; }
     .offer__visual .wallbox-badge {
       width: min(36%, 340px);
       max-width: 340px;
-      margin-top: clamp(-230px, -20svh, -180px);
+      margin-top: 0;
       grid-template-columns: minmax(0, 1fr);
       justify-items: center;
       gap: 4px;
