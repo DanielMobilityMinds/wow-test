@@ -68,6 +68,10 @@ let heroViewportHeight = 0;
 let heroViewportWidth = 0;
 let cinematicOffersActive = null;
 let cinematicFrameTime = null;
+let lastScrollSampleY = window.scrollY;
+let lastScrollSampleTime = performance.now();
+let lastScrollInputTime = 0;
+let scrollInputSpeed = 0;
 
 document.documentElement.classList.add('has-motion');
 
@@ -318,7 +322,12 @@ function renderCinematicOffers(frameTime = performance.now()) {
   const motionWidth = Math.min(frameWidth, 1440);
   const motionHeight = Math.min(frameHeight, 940);
   const deltaTime = cinematicFrameTime === null ? 1000 / 60 : clamp(frameTime - cinematicFrameTime, 1, 34);
-  const damping = 1 - Math.exp(-deltaTime / 45);
+  const inputIsActive = frameTime - lastScrollInputTime < 110;
+  if (!inputIsActive) scrollInputSpeed *= Math.exp(-deltaTime / 120);
+  const velocityFactor = clamp(scrollInputSpeed / 2.2);
+  const responseTime = 70 + velocityFactor * 90;
+  const damping = 1 - Math.exp(-deltaTime / responseTime);
+  const maxProgressPerSecond = 2.4 - velocityFactor * .8;
   cinematicFrameTime = frameTime;
 
   if (!active && cinematicOffersActive === false) return;
@@ -343,7 +352,9 @@ function renderCinematicOffers(frameTime = performance.now()) {
     } else {
       const delta = targetProgress - offer.currentProgress;
       if (Math.abs(delta) > .001) {
-        offer.currentProgress += delta * damping;
+        const dampedStep = delta * damping;
+        const maxStep = maxProgressPerSecond * deltaTime / 1000;
+        offer.currentProgress += clamp(dampedStep, -maxStep, maxStep);
         needsAnotherFrame = true;
       } else {
         offer.currentProgress = targetProgress;
@@ -414,7 +425,7 @@ const renderHero = (frameTime) => {
     const distance = Math.max(1, heroStage.offsetHeight - frameHeight);
     const progress = clamp(-rect.top / distance);
     const cinematic = smootherstep(0, 1, progress);
-    const zoom = 1 + cinematic * (desktopHeroActive ? .18 : 2.4);
+    const zoom = 1 + cinematic * 2.4;
     const fade = desktopHeroActive
       ? 1 - smoothstep(.9, .995, progress)
       : 1 - smoothstep(.94, 1, progress);
@@ -425,6 +436,7 @@ const renderHero = (frameTime) => {
         : smoothstep(.84, 1, progress))
     );
     const stageFade = desktopHeroActive ? 1 - smoothstep(.94, 1, progress) : 1;
+    const cover = desktopHeroActive ? smoothstep(.42, .76, progress) : 0;
     const nextDesktopHeroComplete = desktopHeroActive && progress >= .99;
 
     if (nextDesktopHeroComplete !== desktopHeroComplete) {
@@ -450,6 +462,7 @@ const renderHero = (frameTime) => {
     heroStage.style.setProperty('--hero-copy-fade', copyFade.toFixed(4));
     heroStage.style.setProperty('--hero-bloom', bloom.toFixed(4));
     heroStage.style.setProperty('--hero-stage-fade', stageFade.toFixed(4));
+    heroStage.style.setProperty('--hero-cover', cover.toFixed(4));
     heroStage.style.setProperty('pointer-events', progress >= .84 ? 'none' : 'auto');
     return;
   }
@@ -477,6 +490,7 @@ const renderHero = (frameTime) => {
     heroStage?.style.removeProperty('--hero-copy-fade');
     heroStage?.style.removeProperty('--hero-bloom');
     heroStage?.style.removeProperty('--hero-stage-fade');
+    heroStage?.style.removeProperty('--hero-cover');
     heroStage?.style.removeProperty('pointer-events');
     return;
   }
@@ -524,7 +538,20 @@ const requestHeroRender = () => {
   if (!heroFrame) heroFrame = window.requestAnimationFrame(renderHero);
 };
 
-window.addEventListener('scroll', requestHeroRender, { passive: true });
+const handleScrollMotion = () => {
+  const now = performance.now();
+  const elapsed = clamp(now - lastScrollSampleTime, 8, 120);
+  const distance = Math.abs(window.scrollY - lastScrollSampleY);
+  const instantaneousSpeed = distance / elapsed;
+
+  scrollInputSpeed = scrollInputSpeed * .35 + instantaneousSpeed * .65;
+  lastScrollSampleY = window.scrollY;
+  lastScrollSampleTime = now;
+  lastScrollInputTime = now;
+  requestHeroRender();
+};
+
+window.addEventListener('scroll', handleScrollMotion, { passive: true });
 window.addEventListener('resize', requestHeroRender, { passive: true });
 mobileHero.addEventListener('change', requestHeroRender);
 tabletHero.addEventListener('change', requestHeroRender);

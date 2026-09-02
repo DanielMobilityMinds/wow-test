@@ -155,6 +155,7 @@ a { color: inherit; }
   --hero-fade: 1;
   --hero-copy-fade: 1;
   --hero-bloom: 0;
+  --hero-cover: 0;
   --hero-pin-y: 0px;
   --hero-pin-distance: 90svh;
   --hero-wow-top: clamp(152px, 23svh, 194px);
@@ -1488,6 +1489,14 @@ a { color: inherit; }
     will-change: auto;
   }
 
+  .hero.is-desktop-cinematic .hero__motion::before {
+    display: block;
+    inset: 0;
+    background: #ffbcbc;
+    opacity: var(--hero-cover);
+    transform: none;
+  }
+
   .hero.is-desktop-cinematic .hero__wow {
     opacity: var(--hero-fade);
     transform: translateY(calc(var(--hero-p) * var(--hero-drift-y))) scale(var(--hero-zoom));
@@ -1671,7 +1680,7 @@ a { color: inherit; }
 
   /* Desktop cinematic offer sequence: oversized entry, diagonal settle, final layout. */
   .offer.is-cinematic {
-    min-height: 190svh;
+    min-height: 215svh;
     overflow: clip;
   }
 
