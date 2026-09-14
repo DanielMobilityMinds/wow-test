@@ -3026,3 +3026,35 @@ to {
   border-bottom: 0 !important;
   box-shadow: none !important;
 }
+
+/* Keep legal tables consistent even when the host supplies table typography. */
+#wow-campaign .fineprint__inner {
+  font-family: "WOW MMC", Arial, sans-serif;
+}
+#wow-campaign .legal-footnote__table,
+#wow-campaign .legal-footnote__table th,
+#wow-campaign .legal-footnote__table td {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+/* An atomic inline box also prevents an ancestor's decoration crossing the stars. */
+#wow-campaign .benefit-card--guarantee h3 > a.wow-footnote {
+  display: inline-block;
+  text-decoration: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+/* Scroll targets are focusable for navigation, without framing the legal copy. */
+#wow-campaign [id^="wow-fn-"][tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Preserve the original guarantee heading against host heading defaults. */
+#wow-campaign .benefit-card--guarantee h3 {
+  font-family: inherit;
+  font-weight: 700;
+  line-height: inherit;
+  hyphens: manual;
+}
