@@ -679,7 +679,7 @@
 #wow-campaign .offer--l200 .offer__car {
  width: 115%; margin: -14px 0 0; 
 }
-@media (max-width: 719px) {
+@media (width < 720px) {
 #wow-campaign .offer--asx .offer__inner,
 #wow-campaign .offer--grandis .offer__inner {
 
@@ -905,7 +905,7 @@
 #wow-campaign .reveal.is-visible {
  opacity: 1; transform: none; 
 }
-@media (max-width: 719px) {
+@media (width < 720px) {
 #wow-campaign .skip-link,
 #wow-campaign .mobile-nav {
 
@@ -1059,7 +1059,7 @@
 
 
 }
-@media (max-width: 719px) and (prefers-reduced-motion: reduce) {
+@media (width < 720px) and (prefers-reduced-motion: reduce) {
 #wow-campaign .mobile-more__content {
  transition: none; 
 }
@@ -1145,7 +1145,7 @@ to {
 
 
 }
-@media (max-width: 719px) and (prefers-reduced-motion: reduce) {
+@media (width < 720px) and (prefers-reduced-motion: reduce) {
 #wow-campaign .site-header {
  position: absolute; opacity: 1; transform: none; animation: none; will-change: auto; 
 }
@@ -1195,7 +1195,7 @@ to {
 
 
 }
-@media (min-width: 720px) and (max-width: 1279px), (min-width: 1280px) and (max-width: 1366px) and (max-aspect-ratio: 1499/1000), (min-width: 1280px) and (max-height: 649px) {
+@media (min-width: 720px) and (width < 1280px), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2), (min-width: 1280px) and (height < 650px) {
 #wow-campaign {
 
     --header-h: 72px;
@@ -2966,12 +2966,12 @@ to {
 #wow-campaign .wow-artwork--price-4 > .wow-artwork-note { left: auto; right: 0; }
 #wow-campaign .wow-artwork--9 > .wow-artwork-note { left: 60%; top: 75%; width: 12%; height: 16%; }
 #wow-campaign .wow-artwork--warranty > .wow-artwork-note { left: 57%; top: 81%; width: 22%; height: 8%; }
-@media (max-width: 719px) {
+@media (width < 720px) {
   #wow-campaign .offer--outlander .offer__inner { grid-template-areas: "title" "price" "car" "extra" "cta" "legal"; grid-template-rows: auto auto auto auto auto auto; }
 }
 
 /* Tablet only: content-sized rows and a shared optical vehicle baseline. */
-@media (min-width: 720px) and (max-width: 1279px), (min-width: 1280px) and (max-width: 1366px) and (max-aspect-ratio: 1499/1000), (min-width: 1280px) and (max-height: 649px) {
+@media (min-width: 720px) and (width < 1280px), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2), (min-width: 1280px) and (height < 650px) {
   /* Keep one continuous gradient; the motion layer must not repeat it. */
   #wow-campaign .hero__motion { background: transparent; }
   #wow-campaign .offer .offer__inner { grid-template-areas: none; }
@@ -3060,5 +3060,116 @@ to {
   #wow-campaign .offer__stage { container-type: inline-size; }
   #wow-campaign .offer__visual .offer__car {
     max-width: calc(100cqw - min(420px, 42cqw) - 24px + var(--car-x, 0px));
+  }
+}
+
+/* Keep the initial WOW artwork and copy in separate rows on compact screens.
+   Scroll-driven scale, drift, fade and rotation remain active. */
+@media (min-width: 720px) and (width < 1280px), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2), (min-width: 1280px) and (height < 650px) {
+  #wow-campaign .hero__motion {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    justify-items: center;
+    gap: clamp(12px, 2vh, 24px);
+    padding: clamp(12px, 2vh, 24px) 24px clamp(20px, 3vh, 36px);
+  }
+  #wow-campaign .hero__wow {
+    position: relative;
+    grid-row: 1;
+    top: auto;
+    left: auto;
+    align-self: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    max-width: min(84vw, 860px);
+    object-fit: contain;
+    transform: translateY(calc(var(--hero-p) * var(--hero-drift-y))) scale(var(--hero-zoom)) rotate(calc(var(--hero-p) * -.5deg));
+  }
+  #wow-campaign .hero__copy,
+  #wow-campaign .hero .hero__copy.reveal {
+    position: relative;
+    grid-row: 2;
+    left: auto;
+    bottom: auto;
+    width: min(100%, 520px);
+    margin: 0;
+    transform: translateY(calc(var(--hero-p) * 26px));
+  }
+}
+
+/* Let the guarantee copy keep a readable column before arranging photos beside it. */
+@media (min-width: 720px) and (width < 1280px) {
+  #wow-campaign .benefit-card--guarantee {
+    grid-template-columns: minmax(0, 1fr) 142px;
+    align-items: start;
+  }
+  #wow-campaign .guarantee__polaroids {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 720px) and (max-width: 899px) {
+  #wow-campaign .benefit-card--guarantee { padding: 28px; gap: 24px; }
+}
+#wow-campaign .guarantee__copy { min-width: 0; }
+#wow-campaign .benefit-card--premium .cta { min-width: 0; max-width: 100%; }
+#wow-campaign .fineprint a { overflow-wrap: anywhere; }
+/* The desktop wallbox artwork must stay out of the adjacent explanatory card. */
+@media (min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px) {
+  #wow-campaign .wallbox-story__visual img { max-width: 100%; }
+}
+
+/* Size the compact L200 row from its content, not the entire viewport height. */
+@media (min-width: 720px) and (width < 1280px), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2), (min-width: 1280px) and (height < 650px) {
+  @media (orientation: landscape) {
+    #wow-campaign .offer--l200 .offer__inner {
+      height: auto;
+      min-height: 0;
+      grid-template-rows: auto;
+      align-content: start;
+    }
+    #wow-campaign .offer--l200 .offer__copy { align-self: start; }
+  }
+}
+
+/* Short mobile windows also reserve the text row below the animated artwork. */
+@media (width < 720px) and (height < 650px) {
+  #wow-campaign .hero__motion {
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 16px 18px 20px;
+  }
+  #wow-campaign .hero__wow {
+    position: relative;
+    grid-row: 1;
+    justify-self: start;
+    top: auto;
+    left: 50%;
+    width: 100%;
+    max-width: 430px;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  #wow-campaign .hero__copy {
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+/* Wide phone windows need image-sized rows instead of narrow-phone row caps. */
+@media (min-width: 480px) and (width < 720px) {
+  #wow-campaign .offer--asx .offer__inner,
+  #wow-campaign .offer--grandis .offer__inner {
+    grid-template-rows: auto auto auto auto auto auto auto;
+  }
+  #wow-campaign .offer--outlander .offer__inner,
+  #wow-campaign .offer--black .offer__inner {
+    grid-template-rows: auto auto auto auto auto auto auto auto;
   }
 }
