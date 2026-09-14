@@ -3017,3 +3017,12 @@ to {
     }
   }
 }
+
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"],
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:hover,
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:focus,
+#wow-campaign #wow-fn-warranty > sup {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
