@@ -3239,3 +3239,19 @@ to {
   #wow-campaign .guarantee__polaroids { display: grid; position: relative; grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); height: auto; transform: none; gap: 12px; }
   #wow-campaign .guarantee__polaroids img:nth-child(n) { position: relative; top: auto; left: auto; width: 100%; }
 }
+
+/* Restore the original Outlander prominence while reserving its CTA column. */
+@media (min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px), (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) {
+  #wow-campaign .offer--outlander .offer__actions { width: min(100%, 340px); }
+  #wow-campaign .offer--outlander .offer__visual .offer__car {
+    max-width: calc(100cqw - min(340px, 34cqw) - 24px + var(--car-x, 0px));
+  }
+}
+@media (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) and ((width < 1280px) or (height < 650px)) {
+  #wow-campaign .offer--outlander .offer__actions { width: calc(340 * var(--wow-u)); }
+  #wow-campaign .offer--outlander .offer__visual .offer__car { max-width: calc(925 * var(--wow-u)); }
+}
+/* The wallbox deliberately overlaps the card edge, staying inside its padding. */
+@media (min-height: 650px) and (min-width: 1367px), (min-height: 650px) and (min-width: 1280px) and (min-aspect-ratio: 3/2) {
+  #wow-campaign .wallbox-story__visual img { width: 390px; max-width: none; translate: -8px 0; }
+}
