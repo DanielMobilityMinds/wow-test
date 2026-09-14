@@ -2923,6 +2923,7 @@ to {
 }
 
 
+
 /* Host integration: no styles outside #wow-campaign. */
 #wow-campaign {
   --wow-host-offset: 0px;
@@ -2948,6 +2949,14 @@ to {
 }
 #wow-campaign .wow-price-note { display: block; color: inherit; }
 #wow-campaign .wow-footnote { color: inherit; text-decoration: none; cursor: pointer; pointer-events: auto; }
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"],
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:hover,
+#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:focus,
+#wow-campaign #wow-fn-warranty > sup {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
 #wow-campaign .offer__visual .wow-footnote,
 #wow-campaign .offer__subsidy { pointer-events: auto; position: relative; z-index: 8; }
 #wow-campaign [id^="wow-fn-"] { scroll-margin-top: calc(var(--wow-host-offset) + 24px); }
@@ -3014,15 +3023,6 @@ to {
   }
 }
 
-#wow-campaign a.wow-footnote[href="#wow-fn-warranty"],
-#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:hover,
-#wow-campaign a.wow-footnote[href="#wow-fn-warranty"]:focus,
-#wow-campaign #wow-fn-warranty > sup {
-  text-decoration: none !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-}
-
 /* Keep legal tables consistent even when the host supplies table typography. */
 #wow-campaign .fineprint__inner {
   font-family: "WOW MMC", Arial, sans-serif;
@@ -3053,14 +3053,6 @@ to {
   font-weight: 700;
   line-height: inherit;
   hyphens: manual;
-}
-
-/* Reserve the text/CTA column when oversized desktop cars approach it. */
-@media (min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px), (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) {
-  #wow-campaign .offer__stage { container-type: inline-size; }
-  #wow-campaign .offer__visual .offer__car {
-    max-width: calc(100cqw - min(420px, 42cqw) - 24px + var(--car-x, 0px));
-  }
 }
 
 /* Keep the initial WOW artwork and copy in separate rows on compact screens.
@@ -3117,11 +3109,6 @@ to {
 #wow-campaign .guarantee__copy { min-width: 0; }
 #wow-campaign .benefit-card--premium .cta { min-width: 0; max-width: 100%; }
 #wow-campaign .fineprint a { overflow-wrap: anywhere; }
-/* The desktop wallbox artwork must stay out of the adjacent explanatory card. */
-@media (min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px), (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) {
-  #wow-campaign .wallbox-story__visual img { max-width: 100%; }
-}
-
 /* Size the compact L200 row from its content, not the entire viewport height. */
 @media (min-width: 720px) and (width < 1280px) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine))), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine))), (min-width: 1280px) and (height < 650px) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine))) {
   @media (orientation: landscape) {
@@ -3174,63 +3161,90 @@ to {
   }
 }
 
-/* Compact desktop windows keep the campaign composition. Sizes share one
-   available-space unit; touch tablets retain their mobile-style layout. */
-@media (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) and ((width < 1280px) or (height < 650px)) {
-  #wow-campaign .offer {
-    --wow-u: min(1px, calc((100vw - 112px) / 1248), calc(var(--wow-frame-h) / 740));
-  }
-  #wow-campaign .offer__stage {
-    width: calc(1248 * var(--wow-u));
-    height: auto;
-    min-height: calc(740 * var(--wow-u));
-    padding: calc(44 * var(--wow-u)) 0 calc(22 * var(--wow-u));
-    grid-template-columns: minmax(0, .42fr) minmax(0, .58fr);
-    grid-template-rows: minmax(min-content, 1fr) auto;
-    column-gap: calc(28 * var(--wow-u));
-    row-gap: calc(20 * var(--wow-u));
-  }
-  #wow-campaign .offer .offer__inner { height: auto; min-height: var(--wow-frame-h); }
-  #wow-campaign .offer h2 { font-size: calc(50 * var(--wow-u)); white-space: nowrap; }
-  #wow-campaign .offer__eyebrow { font-size: calc(20 * var(--wow-u)); margin-top: calc(10 * var(--wow-u)); }
-  #wow-campaign .offer__payment { font-size: calc(23 * var(--wow-u)); margin-top: calc(7 * var(--wow-u)); }
-  #wow-campaign .offer .price-art { width: calc(470 * var(--wow-u)); margin-top: calc(11 * var(--wow-u)); }
-  #wow-campaign .offer .price-art--short { width: calc(450 * var(--wow-u)); }
-  #wow-campaign .offer__actions { width: calc(420 * var(--wow-u)); margin-top: calc(16 * var(--wow-u)); gap: calc(12 * var(--wow-u)); }
-  #wow-campaign .offer__actions .cta, #wow-campaign .offer__copy > .cta {
-    width: calc(320 * var(--wow-u)); min-height: calc(52 * var(--wow-u));
-    font-size: max(14px, calc(16 * var(--wow-u))); padding: calc(9 * var(--wow-u)) 12px;
-  }
-  #wow-campaign .offer__action-copy { font-size: max(13px, calc(15 * var(--wow-u))); }
-  #wow-campaign .offer__visual .offer__car {
-    max-width: calc(810 * var(--wow-u)); margin-bottom: calc(22 * var(--wow-u));
-  }
-  #wow-campaign .offer--asx { --car-x: calc(2 * var(--wow-u)); --car-y: calc(25 * var(--wow-u)); }
-  #wow-campaign .offer--grandis { --car-x: calc(42 * var(--wow-u)); --car-y: calc(48 * var(--wow-u)); }
-  #wow-campaign .offer--outlander { --car-x: calc(58 * var(--wow-u)); --car-y: calc(13 * var(--wow-u)); }
-  #wow-campaign .offer--black { --car-x: calc(30 * var(--wow-u)); --car-y: calc(34 * var(--wow-u)); }
-  #wow-campaign .offer--eclipse { --car-x: calc(-13 * var(--wow-u)); --car-y: calc(50 * var(--wow-u)); --extra-base-y: calc(-38 * var(--wow-u)); }
-  #wow-campaign .offer--l200 { --car-x: calc(52 * var(--wow-u)); --car-y: calc(5 * var(--wow-u)); }
-  #wow-campaign .offer__visual .wallbox-badge {
-    width: calc(455 * var(--wow-u)); max-width: none;
-    grid-template-columns: calc(230 * var(--wow-u)) minmax(0, 1fr); gap: calc(40 * var(--wow-u));
-  }
-  #wow-campaign .offer__visual .wallbox-badge img { width: calc(230 * var(--wow-u)); }
-  #wow-campaign .offer__visual .wallbox-badge p { font-size: calc(23 * var(--wow-u)); hyphens: manual; }
-  #wow-campaign .offer__visual .wallbox-badge p span { white-space: nowrap; }
-  #wow-campaign .offer--eclipse .offer__availability { margin-top: calc(18 * var(--wow-u)); font-size: max(13px, calc(16 * var(--wow-u))); }
-  #wow-campaign .offer--eclipse .offer__actions { margin-top: calc(18 * var(--wow-u)); }
-  #wow-campaign .offer--eclipse .offer__subsidy { width: calc(184 * var(--wow-u)); margin: 0 0 calc(-10 * var(--wow-u)); }
-  #wow-campaign .offer .offer__legal { min-height: calc(60 * var(--wow-u)); font-size: max(12px, calc(14 * var(--wow-u))); padding: 6px calc(20 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .coming { width: calc(340 * var(--wow-u)); margin-top: calc(11 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .offer__description { max-width: calc(400 * var(--wow-u)); font-size: max(13px, calc(15 * var(--wow-u))); margin-top: calc(11 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .offer__from { font-size: calc(20 * var(--wow-u)); margin-top: calc(11 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .offer__from strong { font-size: calc(40 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .offer__copy > .cta { margin-top: calc(45 * var(--wow-u)); }
-  #wow-campaign .offer--l200 .offer__stage { grid-template-rows: auto; align-content: center; }
-  #wow-campaign .hero__copy h1 { font-size: clamp(32px, 4vw, 50px); }
-  #wow-campaign .hero__motion { padding: 18px 24px 22px; gap: 16px; }
-  #wow-campaign .hero__wow { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+
+
+/* Preserve V1 typography against native template defaults. */
+#wow-campaign { hyphens: manual; }
+#wow-campaign .wallbox-story__summary h3,
+#wow-campaign .benefit-card h3 { font-family: inherit; font-weight: 700; }
+/* Preserve V1's complete composition on a smaller desktop canvas. Only this
+   offer stage scales; the host page, reading sections and viewport do not. */
+#wow-campaign[data-wow-reference-layout] .offer .offer__inner {
+  width: 100%; height: max(var(--wow-frame-h), var(--wow-reference-h));
+  min-height: max(var(--wow-frame-h), var(--wow-reference-h));
+  grid-template-columns: minmax(0, 1fr);
+}
+#wow-campaign[data-wow-reference-layout] .offer__stage {
+  --wow-frame-h: 780px;
+  width: 1248px; height: 780px; max-width: none;
+  transform: scale(var(--wow-reference-scale)); transform-origin: center;
+}
+#wow-campaign[data-wow-reference-flow] .offer { min-height: var(--wow-reference-h); }
+#wow-campaign[data-wow-reference-flow] .offer .offer__inner { position: relative; top: auto; }
+/* The newly supplied offer copy must not extend into the unchanged car. */
+#wow-campaign .offer--outlander .offer__action-copy { max-width: 360px; }
+#wow-campaign[data-wow-reference-layout] .offer--asx .offer__stage {
+    --car-fluid: 124%;
+    --car-max: 860px;
+    --car-x: 2px;
+    --car-y: 36px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--grandis .offer__stage {
+    --car-fluid: 126%;
+    --car-max: 877px;
+    --car-x: 44px;
+    --car-y: 82px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--outlander .offer__stage {
+    --car-fluid: 137%;
+    --car-max: 950px;
+    --car-x: 42px;
+    --car-y: 18px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--black .offer__stage {
+    --car-fluid: 115%;
+    --car-max: 797px;
+    --car-x: 32px;
+    --car-y: 50px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--eclipse .offer__stage {
+    --car-fluid: 117%;
+    --car-max: 809px;
+    --car-x: -14px;
+    --car-y: 47px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--l200 .offer__stage {
+    --car-fluid: 134%;
+    --car-max: 929px;
+    --car-x: 55px;
+    --car-y: -14px;
+   }
+#wow-campaign[data-wow-reference-layout] .offer--eclipse .offer__stage {  --extra-base-y: -58px;  }
+#wow-campaign[data-wow-reference-layout] .offer--asx .offer__stage {  --car-y: clamp(14px, calc(45.1542px - 18.4px), 36px);  }
+#wow-campaign[data-wow-reference-layout] .offer--grandis .offer__stage {
+    --car-x: clamp(38px, calc(12.3162px + 29.2px), 44px);
+    --car-y: clamp(18px, calc(131.3676px - 76.3px), 82px);
+   }
+#wow-campaign[data-wow-reference-layout] .offer--outlander .offer__stage {
+    --car-x: clamp(42px, calc(111.3px - 57.4704px), 70px);
+    --car-y: clamp(7px, calc(22.5810px - 9.2px), 18px);
+   }
+#wow-campaign[data-wow-reference-layout] .offer--black .offer__stage {
+    --car-x: clamp(28px, calc(8.2134px + 22.1px), 32px);
+    --car-y: clamp(20px, calc(61.5810px - 24.2px), 50px);
+   }
+#wow-campaign[data-wow-reference-layout] .offer--eclipse .offer__stage {
+    --car-max: clamp(710px, calc(203.2134px + 564.1px), 809px);
+    --car-x: clamp(-14px, calc(-4.1028px - 9.1px), -12px);
+    --car-y: clamp(19px, calc(57.4704px - 22.3px), 47px);
+   }
+#wow-campaign[data-wow-reference-layout] .offer--l200 .offer__stage {
+    --car-x: clamp(48px, calc(14.3676px + 37.7px), 55px);
+    --car-y: clamp(-14px, calc(75.1px - 73.8972px), 22px);
+   }
+
+/* Reading sections reflow only when width requires it, never due to height. */
+@media (min-width: 1000px) and (width < 1280px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) {
   #wow-campaign .benefits { min-height: 0; padding: 64px 0; }
   #wow-campaign .benefits__inner { width: calc(100% - 64px); }
   #wow-campaign .wallbox-story { grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); grid-template-areas: "visual summary" "text text"; gap: 28px; }
@@ -3238,20 +3252,4 @@ to {
   #wow-campaign .benefit-card--guarantee { grid-template-columns: minmax(0, 1fr) 142px; padding: 36px; gap: 28px; }
   #wow-campaign .guarantee__polaroids { display: grid; position: relative; grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); height: auto; transform: none; gap: 12px; }
   #wow-campaign .guarantee__polaroids img:nth-child(n) { position: relative; top: auto; left: auto; width: 100%; }
-}
-
-/* Restore the original Outlander prominence while reserving its CTA column. */
-@media (min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px), (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) {
-  #wow-campaign .offer--outlander .offer__actions { width: min(100%, 340px); }
-  #wow-campaign .offer--outlander .offer__visual .offer__car {
-    max-width: calc(100cqw - min(340px, 34cqw) - 24px + var(--car-x, 0px));
-  }
-}
-@media (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine) and ((width < 1280px) or (height < 650px)) {
-  #wow-campaign .offer--outlander .offer__actions { width: calc(340 * var(--wow-u)); }
-  #wow-campaign .offer--outlander .offer__visual .offer__car { max-width: calc(925 * var(--wow-u)); }
-}
-/* The wallbox deliberately overlaps the card edge, staying inside its padding. */
-@media (min-height: 650px) and (min-width: 1367px), (min-height: 650px) and (min-width: 1280px) and (min-aspect-ratio: 3/2) {
-  #wow-campaign .wallbox-story__visual img { width: 390px; max-width: none; translate: -8px 0; }
 }

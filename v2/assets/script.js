@@ -434,7 +434,7 @@ const clearCinematicOffer = (offer) => {
 };
 
 function renderCinematicOffers(frameTime = performance.now()) {
-  const active = desktopMotion.matches && !reducedMotion.matches;
+  const active = desktopMotion.matches && !root.hasAttribute('data-wow-reference-flow') && !reducedMotion.matches;
   const frameWidth = window.innerWidth;
   const frameHeight = measureStableViewportHeight();
   const motionWidth = Math.min(frameWidth, 1440);
@@ -689,10 +689,21 @@ const syncHostGeometry = () => {
   root.style.setProperty('--wow-host-offset', `${hostOffset}px`);
   root.style.setProperty('--wow-frame-h', `${Math.max(1, window.innerHeight - hostOffset)}px`);
   root.style.setProperty('--header-h', '0px');
+  // Reference geometry is shared by every model; do not resize parts separately.
+  const availableHeight = Math.max(1, window.innerHeight - hostOffset);
+  const referenceLayout = desktopMotion.matches && (root.clientWidth < 1460 || availableHeight < 700);
+  const widthScale = Math.min(1, root.clientWidth * (1 - 196 / 1460) / 1248);
+  const referenceScale = Math.min(widthScale, Math.max(.65, availableHeight / 780));
+  root.toggleAttribute('data-wow-reference-layout', referenceLayout);
+  root.toggleAttribute('data-wow-reference-flow', referenceLayout && 780 * referenceScale > availableHeight + 1);
+  root.style.setProperty('--wow-reference-scale', String(referenceScale));
+  root.style.setProperty('--wow-reference-h', `${780 * referenceScale}px`);
+
   requestHeroRender();
 };
 if (hostHeader && 'ResizeObserver' in window) new ResizeObserver(syncHostGeometry).observe(hostHeader);
 window.addEventListener('resize', syncHostGeometry, { passive: true });
+desktopMotion.addEventListener('change', syncHostGeometry);
 syncHostGeometry();
 
 // Capture only campaign anchor navigation to avoid the host's generic 175px handler.
