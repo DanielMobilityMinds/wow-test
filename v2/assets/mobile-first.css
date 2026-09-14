@@ -3253,3 +3253,20 @@ to {
   #wow-campaign .guarantee__polaroids { display: grid; position: relative; grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); height: auto; transform: none; gap: 12px; }
   #wow-campaign .guarantee__polaroids img:nth-child(n) { position: relative; top: auto; left: auto; width: 100%; }
 }
+
+/* Keep fractional mobile section edges over their own endpoint color.
+   A shared coral underlay can otherwise show through between composited layers. */
+@media (width < 720px) {
+  #wow-campaign .offer-flow { background: transparent; }
+  #wow-campaign .offer--asx { --wow-edge-color: #f05d79; }
+  #wow-campaign .offer--grandis { --wow-edge-color: #da4b96; }
+  #wow-campaign .offer--outlander { --wow-edge-color: #b1338e; }
+  #wow-campaign .offer--black { --wow-edge-color: #883487; }
+  #wow-campaign .offer--eclipse { --wow-edge-color: #a3ace5; }
+  #wow-campaign .offer--l200 { --wow-edge-color: #0a78a3; }
+  #wow-campaign .offer-flow > .offer {
+    background-color: var(--wow-edge-color);
+    box-shadow: 0 2px 0 var(--wow-edge-color);
+  }
+  #wow-campaign .benefits { box-shadow: 0 -2px 0 #0a78a3; }
+}
