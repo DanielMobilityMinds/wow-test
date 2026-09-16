@@ -702,6 +702,8 @@ const syncHostGeometry = () => {
   root.style.setProperty('--header-h', '0px');
   // Reference geometry is shared by every model; do not resize parts separately.
   const availableHeight = Math.max(1, window.innerHeight - hostOffset);
+  root.toggleAttribute("data-wow-compact-hero", availableHeight < 650);
+  if (heroViewportHeight !== availableHeight) heroViewportHeight = 0;
   const referenceLayout = desktopMotion.matches && (root.clientWidth < 1460 || availableHeight < 700);
   const widthScale = Math.min(1, root.clientWidth * (1 - 196 / 1460) / 1248);
   const referenceScale = Math.min(widthScale, Math.max(.65, availableHeight / 780));

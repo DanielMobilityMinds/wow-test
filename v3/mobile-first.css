@@ -3299,3 +3299,30 @@ to {
   }
   #wow-campaign .benefits { box-shadow: 0 -2px 0 #0a78a3; }
 }
+
+/* Reserve independent artwork and copy rows using the space below the host header. */
+@media (width < 720px) {
+  #wow-campaign[data-wow-compact-hero] .hero__motion {
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 24px;
+    padding: 16px 18px 24px;
+  }
+  #wow-campaign[data-wow-compact-hero] .hero__wow {
+    position: relative;
+    grid-row: 1;
+    justify-self: start;
+    top: auto;
+    left: 50%;
+    width: 100%;
+    max-width: 430px;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  #wow-campaign[data-wow-compact-hero] .hero__copy {
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+  }
+}
