@@ -12,6 +12,7 @@ const mobileHero = window.matchMedia('(width < 720px)');
 const tabletHero = window.matchMedia('(min-width: 720px) and (width < 1280px) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine))), (min-width: 1280px) and (width < 1367px) and (aspect-ratio < 3/2) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine))), (min-width: 1280px) and (height < 650px) and (not ((min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine)))');
 const desktopMotion = window.matchMedia('(min-width: 1367px) and (min-height: 650px), (min-width: 1280px) and (min-aspect-ratio: 3/2) and (min-height: 650px), (min-width: 1000px) and (min-height: 450px) and (min-aspect-ratio: 3/2) and (hover: hover) and (pointer: fine)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let keyboardNavigation = false;
 const mobileDisclosure = window.matchMedia('(width < 720px)');
 const supportsScrollPin = !document.querySelector('.m0010') && (CSS.supports?.('animation-timeline: scroll()') ?? false);
 let heroFrame = 0;
@@ -278,7 +279,7 @@ const elementViewportProgress = (element, stage, frameHeight, start, end) => {
 };
 
 function renderKineticCards() {
-  const active = (mobileHero.matches || tabletHero.matches) && !reducedMotion.matches;
+  const active = (mobileHero.matches || tabletHero.matches) && !reducedMotion.matches && !keyboardNavigation;
   const frameHeight = tabletHero.matches ? measureStableViewportHeight() : (heroViewportHeight || window.innerHeight);
 
   if (!active && kineticCardsActive === false) return;
@@ -434,7 +435,7 @@ const clearCinematicOffer = (offer) => {
 };
 
 function renderCinematicOffers(frameTime = performance.now()) {
-  const active = desktopMotion.matches && !root.hasAttribute('data-wow-reference-flow') && !reducedMotion.matches;
+  const active = desktopMotion.matches && !root.hasAttribute('data-wow-reference-flow') && !reducedMotion.matches && !keyboardNavigation;
   const frameWidth = window.innerWidth;
   const frameHeight = measureStableViewportHeight();
   const motionWidth = Math.min(frameWidth, 1440);
@@ -647,6 +648,16 @@ const renderHero = (frameTime) => {
 const requestHeroRender = () => {
   if (!heroFrame) heroFrame = window.requestAnimationFrame(renderHero);
 };
+
+// Scroll-gated CTAs must be reachable before the browser advances Tab focus.
+// Keep this mode for the visit so subsequent animation frames cannot hide focus.
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Tab' || keyboardNavigation) return;
+  keyboardNavigation = true;
+  root.setAttribute('data-wow-keyboard', '');
+  renderKineticCards();
+  renderCinematicOffers(performance.now());
+}, { capture: true });
 
 window.addEventListener('scroll', requestHeroRender, { passive: true });
 window.addEventListener('resize', requestHeroRender, { passive: true });

@@ -27,12 +27,17 @@
   --paper: #fff;
   --header: #4d4d4d;
   font-family: "WOW MMC", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
   color: var(--ink);
   font-synthesis: none;
 
 }
 #wow-campaign * {
  box-sizing: border-box; 
+}
+#wow-campaign p {
+ margin: 1em 0;
 }
 #wow-campaign {
  scroll-behavior: smooth; 
@@ -480,6 +485,7 @@
   text-align: center;
   text-decoration: none;
   font-weight: 700;
+  line-height: 1.2;
   cursor: pointer;
   transition: transform .2s ease, background-color .2s ease, color .2s ease;
 
@@ -509,7 +515,7 @@
  width: 100%; 
 }
 #wow-campaign .offer__actions .cta--secondary {
- background: rgba(0, 0, 0, .08); 
+ background: #fff; color: #111;
 }
 #wow-campaign .offer__visual {
  display: contents; 
@@ -737,6 +743,9 @@
 #wow-campaign .cta:hover {
  background: #fff; color: #111; 
 }
+#wow-campaign .offer__actions .cta--secondary:hover {
+ background: #111; color: #fff;
+}
 #wow-campaign .cta:focus-visible,
 #wow-campaign .menu-button:focus-visible,
 #wow-campaign .mobile-nav a:focus-visible {
@@ -799,7 +808,7 @@
  margin-top: 34px; padding: 26px 20px; border: 1px solid rgba(95, 121, 170, .45); border-radius: var(--radius); background: rgba(255, 255, 255, .48); 
 }
 #wow-campaign .benefit-card h3 {
- margin: 0 0 22px; font-size: clamp(27px, 8vw, 36px); 
+ margin: 0 0 22px; font-size: clamp(27px, 8vw, 36px); line-height: 1.12;
 }
 #wow-campaign .benefit-card--premium {
  text-align: center; 
@@ -1022,7 +1031,7 @@
 }
 #wow-campaign .mobile-more__content.is-expanded {
 
-    max-height: 40em;
+    max-height: none;
     -webkit-mask-image: none;
     mask-image: none;
   
@@ -2345,10 +2354,10 @@ to {
 
     z-index: 7;
     width: min(100%, 320px);
-    min-height: 68px;
+    min-height: 58px;
     margin-top: clamp(76px, calc(var(--wow-frame-h) * 0.101), 95px);
     margin-bottom: 0;
-    font-size: 18px;
+    font-size: 17px;
   
 }
 #wow-campaign .offer__actions {
@@ -2824,9 +2833,10 @@ to {
 }
 #wow-campaign .offer__copy > .cta {
 
-    min-height: clamp(54px, calc(calc(var(--wow-frame-h) * 0.03684) + 33.4px), 68px);
+    min-height: clamp(44px, calc(calc(var(--wow-frame-h) * 0.03684) + 23.4px), 58px);
+    padding-block: clamp(8px, calc(calc(var(--wow-frame-h) * 0.01053) + 2.1px), 12px);
     margin-top: clamp(16px, calc(calc(var(--wow-frame-h) * 0.20789) - 100.4px), 95px);
-    font-size: clamp(16px, calc(calc(var(--wow-frame-h) * 0.00526) + 13.1px), 18px);
+    font-size: clamp(15px, calc(calc(var(--wow-frame-h) * 0.00526) + 12.1px), 17px);
   
 }
 #wow-campaign .offer__actions {
@@ -3051,7 +3061,7 @@ to {
 #wow-campaign .benefit-card--guarantee h3 {
   font-family: inherit;
   font-weight: 700;
-  line-height: inherit;
+  line-height: 1.12;
   hyphens: manual;
 }
 
@@ -3255,6 +3265,13 @@ to {
 }
 
 /* Protect the campaign from TYPO3/Bootstrap heading and font defaults. */
+#wow-campaign:not(.has-motion) .mobile-more__content {
+  display: block;
+  max-height: none;
+  overflow: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
 #wow-campaign.integration-export,
 #wow-campaign.integration-export .fineprint__inner {
   font-family: "WOW MMC", Arial, Helvetica, sans-serif;
