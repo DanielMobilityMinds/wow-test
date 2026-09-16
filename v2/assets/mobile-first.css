@@ -3254,9 +3254,19 @@ to {
   #wow-campaign .guarantee__polaroids img:nth-child(n) { position: relative; top: auto; left: auto; width: 100%; }
 }
 
-/* Keep fractional mobile section edges over their own endpoint color.
-   A shared coral underlay can otherwise show through between composited layers. */
-@media (width < 720px) {
+/* Protect the campaign from TYPO3/Bootstrap heading and font defaults. */
+#wow-campaign.integration-export,
+#wow-campaign.integration-export .fineprint__inner {
+  font-family: "WOW MMC", Arial, Helvetica, sans-serif;
+}
+#wow-campaign .hero__copy h1 {
+  font-family: "WOW MMC", Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+/* Cover fractional section edges in the adjoining gradient color at every
+   breakpoint. The shared coral underlay must not flash through during scroll. */
+@media all {
   #wow-campaign .offer-flow { background: transparent; }
   #wow-campaign .offer--asx { --wow-edge-color: #f05d79; }
   #wow-campaign .offer--grandis { --wow-edge-color: #da4b96; }
