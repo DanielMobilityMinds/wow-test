@@ -1,3 +1,21 @@
+@font-face {
+
+  font-family: "WOW MMC";
+  src: url("fonts/MMC-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+
+}
+@font-face {
+
+  font-family: "WOW MMC";
+  src: url("fonts/MMC-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+
+}
 #wow-campaign {
 
   --mobile-frame-h: calc(var(--wow-frame-h) * 1);
@@ -8,7 +26,7 @@
   --ink: #111;
   --paper: #fff;
   --header: #4d4d4d;
-  font-family: "mmc", Arial, Helvetica, sans-serif;
+  font-family: "WOW MMC", Arial, Helvetica, sans-serif;
   color: var(--ink);
   font-synthesis: none;
 
@@ -2914,7 +2932,7 @@ to {
   padding-top: var(--wow-host-offset);
   position: relative;
   isolation: isolate;
-  font-family: "mmc", Arial, sans-serif;
+  font-family: "WOW MMC", Arial, sans-serif;
 }
 #wow-campaign .hero { isolation: isolate; }
 #wow-campaign .offer, #wow-campaign .offer-flow { scroll-margin-top: var(--wow-host-offset); }
@@ -3007,7 +3025,7 @@ to {
 
 /* Keep legal tables consistent even when the host supplies table typography. */
 #wow-campaign .fineprint__inner {
-  font-family: "mmc", Arial, sans-serif;
+  font-family: "WOW MMC", Arial, sans-serif;
 }
 #wow-campaign .legal-footnote__table,
 #wow-campaign .legal-footnote__table th,
