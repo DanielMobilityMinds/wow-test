@@ -515,7 +515,7 @@
  width: 100%; 
 }
 #wow-campaign .offer__actions .cta--secondary {
- background: #fff; color: #111;
+ background: transparent; color: #fff;
 }
 #wow-campaign .offer__visual {
  display: contents; 
@@ -742,9 +742,6 @@
 }
 #wow-campaign .cta:hover {
  background: #fff; color: #111; 
-}
-#wow-campaign .offer__actions .cta--secondary:hover {
- background: #111; color: #fff;
 }
 #wow-campaign .cta:focus-visible,
 #wow-campaign .menu-button:focus-visible,
@@ -1002,7 +999,12 @@
  scroll-margin-top: 0; 
 }
 #wow-campaign .offer__inner {
- min-height: var(--mobile-frame-h); 
+ /* Content-sized mobile offers avoid empty space on tall phone screens. */
+ min-height: 0;
+ align-content: start;
+}
+#wow-campaign .offer--l200 .offer__inner {
+ padding-bottom: 22px;
 }
 #wow-campaign .offer__car {
  z-index: 5; 
