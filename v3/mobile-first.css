@@ -3302,6 +3302,18 @@ to {
 
 /* Reserve independent artwork and copy rows using the space below the host header. */
 @media (width < 720px) {
+  #wow-campaign[data-wow-fixed-pin] .hero.is-mobile-pinned .hero__motion {
+    position: fixed;
+    inset: auto;
+    top: var(--wow-host-offset);
+    transform: none;
+    will-change: auto;
+  }
+  #wow-campaign[data-wow-fixed-pin] .hero__copy,
+  #wow-campaign[data-wow-fixed-pin] .hero .hero__copy.reveal {
+    transform: none;
+    will-change: opacity;
+  }
   #wow-campaign[data-wow-compact-hero] .hero__motion {
     grid-template-rows: minmax(0, 1fr) auto;
     gap: 24px;
@@ -3326,3 +3338,4 @@ to {
     margin: 0;
   }
 }
+

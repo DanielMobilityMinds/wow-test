@@ -4,6 +4,13 @@ const root = document.getElementById("wow-campaign");
 if (!root || root.dataset.wowReady) return;
 root.dataset.wowReady = "true";
 let hostOffset = 0;
+let mobileViewport = null;
+const viewportProbe = document.createElement('div');
+viewportProbe.setAttribute('aria-hidden', 'true');
+viewportProbe.style.cssText = 'position:absolute;width:0;height:100svh;visibility:hidden;pointer-events:none;contain:strict;';
+root.append(viewportProbe);
+const fixedMobilePin = Boolean(document.querySelector('.m0010')) && CSS.supports('position', 'fixed');
+root.toggleAttribute('data-wow-fixed-pin', fixedMobilePin);
 const heroStage = root.querySelector('[data-hero-stage]');
 const siteHeader = root.querySelector('.site-header');
 const menuButton = root.querySelector('.menu-button');
@@ -150,7 +157,18 @@ mobileDisclosure.addEventListener('change', syncMobileMore);
 syncMobileMore();
 
 const measureStableViewportHeight = () => {
-  return Math.round(window.innerHeight - hostOffset);
+  if (!mobileHero.matches) {
+    mobileViewport = null;
+    return Math.max(1, Math.round(window.innerHeight - hostOffset));
+  }
+  const width = window.innerWidth;
+  // Browser chrome and the keyboard change height during a swipe. Keep one
+  // layout height per width/orientation; real width changes start a new layout.
+  if (!mobileViewport || mobileViewport.width !== width) {
+    const smallHeight = viewportProbe.getBoundingClientRect().height || window.innerHeight;
+    mobileViewport = { width, height: Math.min(window.innerHeight, smallHeight) };
+  }
+  return Math.max(1, Math.round(mobileViewport.height - hostOffset));
 };
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
@@ -235,8 +253,11 @@ const kineticCards = [
     };
   });
 
+const kineticStyleCache = new WeakMap();
 const clearKineticStyle = (element) => {
   if (!element) return;
+  if (kineticStyleCache.get(element) === 'clear') return;
+  kineticStyleCache.set(element, 'clear');
   [
     'opacity', 'transform', 'clip-path', 'transition',
     '--motion-x', '--motion-y', '--motion-scale',
@@ -245,6 +266,9 @@ const clearKineticStyle = (element) => {
 
 const applyKineticStyle = (element, progress, x, y, scale = 1, clipped = false) => {
   if (!element) return;
+  const key = `${progress.toFixed(4)}|${x}|${y}|${scale}|${clipped}`;
+  if (kineticStyleCache.get(element) === key) return;
+  kineticStyleCache.set(element, key);
   const inverse = 1 - progress;
   const currentScale = scale + (1 - scale) * progress;
   element.style.setProperty('opacity', progress.toFixed(4));
@@ -284,6 +308,11 @@ function renderKineticCards() {
 
   if (!active && kineticCardsActive === false) return;
 
+  // Measure all visible cards before applying any transform/clip styles.
+  const writes = [];
+  const queueStyle = (...args) => writes.push(() => applyKineticStyle(...args));
+  const queueClear = (element) => writes.push(() => clearKineticStyle(element));
+
   kineticCards.forEach((card) => {
     if (!active) {
       card.animatedElements.forEach(clearKineticStyle);
@@ -299,12 +328,12 @@ function renderKineticCards() {
     models.forEach((element, index) => {
       const anchors = modelAnchors[index] || modelAnchors.at(-1);
       const progress = elementViewportProgress(element, card.stage, frameHeight, anchors[0], anchors[1]);
-      applyKineticStyle(element, smootherstep(0, 1, progress), 0, card.modelY * distance, 1, true);
+      queueStyle(element, smootherstep(0, 1, progress), 0, card.modelY * distance, 1, true);
     });
 
     const priceProgress = elementViewportProgress(price, card.stage, frameHeight, .88, .67);
     const carProgress = elementViewportProgress(car, card.stage, frameHeight, .9, .64);
-    applyKineticStyle(
+    queueStyle(
       price,
       smootherstep(0, 1, priceProgress),
       card.priceX * distance,
@@ -312,23 +341,24 @@ function renderKineticCards() {
       card.priceScale,
     );
     const easedCar = smootherstep(0, 1, carProgress);
-    applyKineticStyle(car, easedCar, card.carX, card.carY, card.carScale);
+    queueStyle(car, easedCar, card.carX, card.carY, card.carScale);
     details.forEach((element, index) => {
       const progress = elementViewportProgress(element, card.stage, frameHeight, 1.02 - index * .02, .84 - index * .02);
-      applyKineticStyle(element, smootherstep(0, 1, progress), 0, 22);
+      queueStyle(element, smootherstep(0, 1, progress), 0, 22);
     });
-    applyKineticStyle(
+    queueStyle(
       extra,
       smootherstep(0, 1, elementViewportProgress(extra, card.stage, frameHeight, 1.04, .84)),
       30,
       0,
       .96,
     );
-    clearKineticStyle(subsidy);
-    applyKineticStyle(cta, smootherstep(0, 1, elementViewportProgress(cta, card.stage, frameHeight, 1.06, .88)), 0, 24);
-    applyKineticStyle(legal, smootherstep(0, 1, elementViewportProgress(legal, card.stage, frameHeight, 1.14, .98)), 0, 20);
+    queueClear(subsidy);
+    queueStyle(cta, smootherstep(0, 1, elementViewportProgress(cta, card.stage, frameHeight, 1.06, .88)), 0, 24);
+    queueStyle(legal, smootherstep(0, 1, elementViewportProgress(legal, card.stage, frameHeight, 1.14, .98)), 0, 20);
   });
 
+  writes.forEach((write) => write());
   kineticCardsActive = active;
 }
 
@@ -543,6 +573,7 @@ function renderCinematicOffers(frameTime = performance.now()) {
 const renderHero = (frameTime) => {
   heroFrame = 0;
   const desktopHeroActive = Boolean(heroStage && desktopMotion.matches && !reducedMotion.matches);
+  if (!mobileHero.matches || reducedMotion.matches) heroStage?.classList.remove('is-mobile-pinned');
   heroStage?.classList.toggle('is-desktop-cinematic', desktopHeroActive);
   const heroRect = heroStage?.getBoundingClientRect();
   const heroHeight = heroStage?.offsetHeight ?? 0;
@@ -622,6 +653,8 @@ const renderHero = (frameTime) => {
   const distance = Math.max(1, heroHeight - heroViewportHeight);
   const progress = clamp((hostOffset - rect.top) / distance);
   const pinY = clamp(hostOffset - rect.top, 0, distance);
+  const pinned = fixedMobilePin && rect.top <= hostOffset && rect.bottom >= hostOffset + heroViewportHeight;
+  heroStage.classList.toggle('is-mobile-pinned', pinned);
   if (rect.bottom < heroViewportHeight * 1.35) renderKineticCards();
   if (supportsScrollPin) return;
   const cinematic = smoothstep(0, 1, progress);
@@ -638,7 +671,7 @@ const renderHero = (frameTime) => {
   }
 
   heroStage.style.setProperty('--hero-p', progress.toFixed(4));
-  if (!supportsScrollPin) heroStage.style.setProperty('--hero-pin-y', `${pinY.toFixed(2)}px`);
+  if (!supportsScrollPin && !pinned) heroStage.style.setProperty('--hero-pin-y', `${pinY.toFixed(2)}px`);
   heroStage.style.setProperty('--hero-zoom', zoom.toFixed(4));
   heroStage.style.setProperty('--hero-fade', fade.toFixed(4));
   heroStage.style.setProperty('--hero-copy-fade', copyFade.toFixed(4));
@@ -698,10 +731,10 @@ const syncHostGeometry = () => {
   if (next !== hostOffset) heroViewportHeight = 0;
   hostOffset = next;
   root.style.setProperty('--wow-host-offset', `${hostOffset}px`);
-  root.style.setProperty('--wow-frame-h', `${Math.max(1, window.innerHeight - hostOffset)}px`);
+  const availableHeight = measureStableViewportHeight();
+  root.style.setProperty('--wow-frame-h', `${availableHeight}px`);
   root.style.setProperty('--header-h', '0px');
   // Reference geometry is shared by every model; do not resize parts separately.
-  const availableHeight = Math.max(1, window.innerHeight - hostOffset);
   root.toggleAttribute("data-wow-compact-hero", availableHeight < 650);
   if (heroViewportHeight !== availableHeight) heroViewportHeight = 0;
   const referenceLayout = desktopMotion.matches && (root.clientWidth < 1460 || availableHeight < 700);
@@ -743,3 +776,4 @@ window.addEventListener('hashchange', () => followCampaignAnchor(null, false));
 window.addEventListener('load', () => followCampaignAnchor(null, false));
 
 })();
+
