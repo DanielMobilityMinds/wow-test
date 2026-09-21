@@ -2988,7 +2988,8 @@ to {
 #wow-campaign .wow-artwork--9 > .wow-artwork-note { left: 60%; top: 75%; width: 12%; height: 16%; }
 #wow-campaign .wow-artwork--warranty > .wow-artwork-note { left: 57%; top: 81%; width: 22%; height: 8%; }
 @media (width < 720px) {
-  #wow-campaign .offer--outlander .offer__inner { grid-template-areas: "title" "price" "car" "extra" "cta" "legal"; grid-template-rows: auto auto auto auto auto auto; }
+  #wow-campaign .offer--outlander .offer__inner,
+  #wow-campaign .offer--black .offer__inner { grid-template-areas: "title" "price" "car" "extra" "cta" "legal"; grid-template-rows: auto auto auto auto auto auto; }
 }
 
 /* Tablet only: content-sized rows and a shared optical vehicle baseline. */
